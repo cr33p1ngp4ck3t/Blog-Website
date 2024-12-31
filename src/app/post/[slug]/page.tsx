@@ -28,12 +28,17 @@ async function getPost(slug: string) {
     return post;
 }
 
+interface PageProps {
+    params: Promise<{
+        slug: string;
+    }>;
+}
+
 export default async function PostPage({
     params,
-}: {
-    params: { slug: string };
-}) {
-    const post = await getPost(params.slug);
+}: PageProps) {
+    const awaitedParams = await params;
+    const post = await getPost(awaitedParams.slug);
 
     return (
         <>
