@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.prose {
+  body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: black;
+    font-size: 16px;
+}
+
+
+/* Heading (h2) */
+h2,h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #111;
+}
+
+hr {
+  border: none;
+  height: 2px; 
+  margin: 1.5rem 0; 
+}
+
+/* Paragraph (p) */
+p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* List Item (li) */
+li {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+/* Blockquote (blockquote) */
+blockquote {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: #555;
+  border-left: 4px solid #0073e6;
+  padding-left: 1rem;
+}
+
+/* Emphasis (em) */
+em {
+  font-weight: 600;
+  color: #0073e6;
+}
+
+/* Link (a) */
+a {
+  color: #0073e6;
+  text-decoration: underline;
+}
+
+
+}
+
