@@ -6,6 +6,7 @@ import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import {  useEffect, useState } from "react";
 import React from 'react'
+import Bg from "./bg";
 
 // Sample POSTS_QUERY with comments
 const POSTS_QUERY = `*[
@@ -42,7 +43,27 @@ interface Props  {
 
 export const  CardContent: React.FC<Props> = ({ id, style }) => {
   const [posts, setPosts] = useState<SanityDocument[]>([]);
-  const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
+  const [clickCounts, setClickCounts] = useState<Record<string, number>>({})
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadTime, setLoadTime] = useState(0);
+
+  const handleLoadClick = async () => {
+    setIsLoading(true); 
+
+    const startTime = Date.now();  
+
+    try {
+      const duration = Date.now() - startTime
+      setLoadTime(duration)
+      const timeoutDuration = Math.max(duration, 1000)
+      setTimeout(() => {
+        setIsLoading(false);  
+      }, timeoutDuration);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setIsLoading(false);  
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,8 +84,9 @@ export const  CardContent: React.FC<Props> = ({ id, style }) => {
     setPosts(updatedPosts);
   };
   return (
-    < >
-        <div className="grid grid-cols-3 gap-5 my-6" id={id} style={style} >
+    < >{
+        isLoading ? (
+          <div className="grid grid-cols-3 gap-5 my-6" id={id} style={style} onClick={handleLoadClick}>
             {posts.map((post) => (
                 <Link
                     href={`/post/${post.slug.current}`}
@@ -96,9 +118,10 @@ export const  CardContent: React.FC<Props> = ({ id, style }) => {
                         {/* <p className="leading-relaxed mb-3">
                             {post.description || "No description available."}
                         </p> */}
+                        <span className="hidden">{loadTime}</span>
                         <div className="flex items-center flex-wrap">
                             <div className="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0">
-                            Learn More
+                            Learn More 
                             <svg
                                 className="w-4 h-4 ml-2"
                                 viewBox="0 0 24 24"
@@ -148,6 +171,13 @@ export const  CardContent: React.FC<Props> = ({ id, style }) => {
                 </Link>
             ))}
         </div>
+          ) :( 
+            <div className="flex justify-center items-center fixed rounded-lg bottom-0 right-0 text-white p-6 z-50 text-2xl font-bold h-screen w-screen">
+                <Bg />
+                <Image src="/loader.svg" alt="" width={30} height={30}/>
+            </div>
+          )
+      }
     </>
   );
 }
