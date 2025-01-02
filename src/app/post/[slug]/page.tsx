@@ -43,7 +43,7 @@ export default async function PostPage({
     return (
         <>
             <div className="sticky left-[6%] top-[4%] flex justify-center items-center w-12 h-12 rounded-full hover:transform hover:scale-105 duration-300 ">
-                <Link href="/" className="hover:underline text-black bg-white"><Image src='/arrowback.svg' alt="" width="40" height="40" /></Link>
+                <Link href="/" className="hover:underline text-black bg-white rounded-full "><Image src='/arrowback.svg' alt="" width="40" height="40" /></Link>
             </div>
             <div className="max-w-3xl mx-auto px-4">
                 <main className="mt-8">

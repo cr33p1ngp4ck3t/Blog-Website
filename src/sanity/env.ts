@@ -4,5 +4,3 @@ export const apiVersion =
 export const dataset = 'production'
 
 export const projectId = 'r0okhdcs'
-
-export const token = process.env.NEXT_PRIVATE_SANITY_TOKEN

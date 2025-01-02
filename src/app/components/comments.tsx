@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { client, writeClient } from '@/sanity/lib/client';
+import { client } from '@/sanity/lib/client';
 import Image from 'next/image';
 
 interface Comment {
@@ -53,14 +53,16 @@ export default function Comments({ postId }: CommentsProps) {
         setIsSubmitting(true);
 
         try {
-            await writeClient.create({
-                _type: 'comment',
-                post: {
-                    _type: 'reference',
-                    _ref: postId
+            const response = await fetch('/api/comments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                ...newComment
+                body: JSON.stringify({ ...newComment, postId }),
             });
+
+            const result = await response.json();
+            if (!result.success) throw new Error(result.error);
 
             setNewComment({
                 name: '',
@@ -128,7 +130,7 @@ export default function Comments({ postId }: CommentsProps) {
                             alt={comment.name}
                             width={30}
                             height={30}
-                            className="rounded-full"
+                            className="rounded-full w-10 h-10"
                             />
                             <div>
                                 <div className="flex justify-between items-start">
