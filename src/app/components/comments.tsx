@@ -36,7 +36,6 @@ export default function Comments({ postId }: CommentsProps) {
 
         fetchComments();
 
-        // Subscribe to real-time updates
         const subscription = client.listen(
             `*[_type == "comment" && references($postId)]`,
             { postId }
@@ -63,7 +62,6 @@ export default function Comments({ postId }: CommentsProps) {
                 ...newComment
             });
 
-            // Reset form
             setNewComment({
                 name: '',
                 email: '',
@@ -121,7 +119,6 @@ export default function Comments({ postId }: CommentsProps) {
                 </button>
             </form>
 
-            {/* Comments List */}
             <div className="space-y-4 p-5 border border-slate-300 bg-slate-100">
                 {comments.map((comment) => (
                     <div key={comment._id} className="border p-4 bg-white">
