@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { type SanityDocument } from "next-sanity";
-import { client, writeClient } from "../../sanity/lib/client";
+import { client } from "../../sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ interface Props {
 
 export const CardContent: React.FC<Props> = ({ id, style }) => {
   const [posts, setPosts] = useState<SanityDocument[]>([]);
-  const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
+  // const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [loadTime, setLoadTime] = useState(0);
 
@@ -138,7 +138,7 @@ export const CardContent: React.FC<Props> = ({ id, style }) => {
                           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                           <circle cx="12" cy="12" r="3"></circle>
                         </svg>
-                        {clickCounts[post._id] || post.views || 0}
+                        { post.views || 0}
                       </span>
                       <span className="text-gray-400 inline-flex items-center leading-none text-sm">
                         <svg
