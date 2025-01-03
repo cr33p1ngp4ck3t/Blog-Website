@@ -10,12 +10,12 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: inter;
 }
 
 .prose {
   body {
-    font-family: Arial, sans-serif;
+    font-family: inter, sans-serif;
     background-color: white;
     color: black;
     font-size: 16px;
