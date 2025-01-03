@@ -29,7 +29,7 @@ export default function PostCard() {
     <>
         <div onClick={handleClick}>
         {isLoading && (
-          <div className="flex justify-center items-center fixed rounded-lg bg-black/20 bottom-0 right-0 text-white p-6 z-50 text-2xl font-bold h-screen w-screen">
+          <div className="flex justify-center items-center fixed rounded-lg bg-black/20 bottom-0 right-0 text-white p-6 z-50 text-2xl font-bold h-screen w-screen bg-dark">
             Fetching Posts... <span className="hidden">{loadTime}ms</span>
           </div>
         )}

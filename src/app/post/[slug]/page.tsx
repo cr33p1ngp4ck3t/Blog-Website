@@ -50,7 +50,7 @@ export default async function PostPage({
                     {post.mainImage && (
                         <Image
                             className="object-cover object-center rounded-lg w-full h-auto"
-                            src={(await urlFor(post.mainImage)).url()}
+                            src={(urlFor(post.mainImage)).url()}
                             alt={post.title}
                             width={1024}
                             height={1024}
@@ -68,7 +68,23 @@ export default async function PostPage({
                         {Array.isArray(post.body) && <PortableText value={post.body} />}
                     </div>
                     <div className="mt-4 mb-8">
-                        <div>Categories: {post.categories ? post.categories?.map((category: { title: any; }) => category.title).join(', ') : 'None'}</div>
+                        <div className="font-bold p-2 mb-2 flex items-center gap-3">Categories: 
+                            {post.categories ?(
+                                <span className="flex gap-2">
+                                    {post.categories?.map((category: { _id: number; title: string; }) => 
+                                        (
+                                            <div key={category._id} className="bg-[#dfeff9] dark:bg-[#101318] text-[#101318] dark:text-[#dfeff9] p-2 cursor-pointer font-normal rounded-2xl w-fit text-sm hover:transform hover:scale-105 duration-300">
+                                                {category.title}
+                                            </div>
+                                        )
+                                    )} 
+                                </span>
+                            ) : (
+                                <span className="text-[#101318] dark:text-[#dfeff9]">
+                                    None
+                                </span>
+                            )}
+                        </div>
                     </div>
                     <Comments postId={post._id} />
                 </main>

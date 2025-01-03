@@ -15,6 +15,7 @@ export const postType = defineType({
     defineField({
       name: 'slug',
       type: 'slug',
+      validation: (Rule) => Rule.required(),
       options: {
         source: 'title',
       },
@@ -42,6 +43,7 @@ export const postType = defineType({
     defineField({
       name: 'categories',
       type: 'array',
+      validation: (Rule) => Rule.required(),
       of: [defineArrayMember({type: 'reference', to: {type: 'category'}})],
     }),
     defineField({
@@ -58,6 +60,7 @@ export const postType = defineType({
       type: 'number', 
       title: 'Views', 
       initialValue: 0, 
+      readOnly: true
     }),
   ],
   preview: {
