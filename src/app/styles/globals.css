@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.navbar {
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+  background-color: rgba(223, 239, 249, 0);
+}
+
+.navbar.scrolled {
+  backdrop-filter: blur(40px);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

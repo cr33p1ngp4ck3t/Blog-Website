@@ -98,7 +98,7 @@ export const CardContent: React.FC<Props> = ({ id, style }) => {
                     priority
                   />
                 </div>
-                <div className="py-6 px-4 flex flex-col h-[160px] justify-between bg-[#dfeff9] dark:bg-[#101318] text-[#101318] dark:text-[#dfeff9]">
+                <div className="py-6 px-4 flex flex-col h-[160px] justify-between bg-white dark:bg-[#101318] text-[#101318] dark:text-[#dfeff9]">
                   <div>
                     <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1 dark:text-[#dfeff9] hover:transform hover:scale-[1.02] duration-300 cursor-pointer">
                       {post.categories ? post.categories.map((category: { title: string }) => category.title).join(', ') : 'None'}
