@@ -3,6 +3,7 @@ import "./styles/globals.css";
 import Header from "./components/header";
 import { Analytics } from "@vercel/analytics/react"
 import { Inter } from 'next/font/google'
+import Footer from "./components/footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,10 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} antialiased`}
+        className={`${inter.className} antialiased dark:bg-[#101318] text-[#101318] dark:text-[#dfeff9] scroll-smooth`}
       >
           <Header />
         {children}<Analytics/>
+          <Footer />
       </body>
     </html>
   );

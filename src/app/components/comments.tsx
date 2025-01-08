@@ -88,7 +88,7 @@ export default function Comments({ postId }: CommentsProps) {
                         placeholder="Name"
                         value={newComment.name}
                         onChange={(e) => setNewComment({ ...newComment, name: e.target.value })}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded placeholder:text-gray-400 dark:bg-[#1f2937] dark:text-white"
                         required
                     />
                 </div>
@@ -98,7 +98,7 @@ export default function Comments({ postId }: CommentsProps) {
                         placeholder="Email"
                         value={newComment.email}
                         onChange={(e) => setNewComment({ ...newComment, email: e.target.value })}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded placeholder:text-gray-400 dark:bg-[#1f2937] dark:text-white"
                         required
                     />
                 </div>
@@ -107,7 +107,7 @@ export default function Comments({ postId }: CommentsProps) {
                         placeholder="Your comment"
                         value={newComment.comment}
                         onChange={(e) => setNewComment({ ...newComment, comment: e.target.value })}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded placeholder:text-gray-400 dark:bg-[#1f2937] dark:text-white"
                         rows={4}
                         required
                     />
@@ -115,22 +115,22 @@ export default function Comments({ postId }: CommentsProps) {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-slate-800 text-white px-4 py-2 rounded hover:bg-slate-600 disabled:bg-gray-400"
+                    className="bg-slate-800 text-white px-4 py-2 rounded hover:bg-slate-600 disabled:bg-gray-400 dark:bg-[#1f2937] dark:text-white"
                 >
                     {isSubmitting ? 'Submitting...' : 'Submit Comment'}
                 </button>
             </form>
 
-            <div className="space-y-4 p-5 border border-slate-300 bg-slate-100">
+            <div className="space-y-4 p-5 border border-slate-300 bg-slate-100 dark:border-slate-700 dark:bg-[#1f2937]">
                 {comments.map((comment) => (
-                    <div key={comment._id} className="border p-4 bg-white">
+                    <div key={comment._id} className="border p-4 bg-white dark:bg-[#1f2937]">
                         <div className='flex gap-4'>
                             <Image
                             src='/user.svg'
                             alt={comment.name}
                             width={30}
                             height={30}
-                            className="rounded-full w-10 h-10"
+                            className="rounded-full w-10 h-10 text-white bg-white"
                             />
                             <div>
                                 <div className="flex justify-between items-start">

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
 
 .navbar {
   backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
@@ -23,6 +26,8 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: inter;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 .prose {
@@ -32,14 +37,23 @@ body {
     color: black;
     font-size: 16px;
 }
-
+/* .prose.dark {
+  body {
+    background-color: #101318;
+    color: #dfeff9;
+  }
+} */
 
 /* Heading (h2) */
 h2,h4 {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #111;
+  color: #101318;
+
+  .dark & {
+    color: #dfeff9;
+  }
 }
 
 hr {
@@ -53,7 +67,11 @@ p {
   font-size: 1rem;
   line-height: 1.5;
   margin-bottom: 1rem;
-  color: #333;
+  color: #0c0e10;
+
+  .dark & {
+    color: #dfeff9;
+  }
 }
 
 /* List Item (li) */
@@ -61,7 +79,11 @@ li {
   font-size: 1rem;
   line-height: 1.5;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: #101318;
+
+  .dark & {
+    color: #dfeff9;
+  }
 }
 
 /* Blockquote (blockquote) */

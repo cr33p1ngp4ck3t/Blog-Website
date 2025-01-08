@@ -9,6 +9,9 @@ export default function Content() {
                         <div className="text-2xl font-bold dark:text-[#dfeff9]">Posts</div>
                         <Card />
                     </div>
+                    <div>
+                        {/* other content */}
+                    </div>
                 </div>
             </div>
         </div>

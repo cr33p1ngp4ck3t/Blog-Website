@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PortableText } from "next-sanity";
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
@@ -42,10 +41,10 @@ export default async function PostPage({
 
     return (
         <>
-            <div className="sticky left-[6%] top-[4%] flex justify-center items-center w-12 h-12 rounded-full hover:transform hover:scale-105 duration-300 ">
+            <div className="sticky left-[6%] top-[14%] flex justify-center items-center w-12 h-12 bg-scroll scroll-smooth hover:transform hover:scale-105 duration-300 ">
                 <Link href="/" className="hover:underline text-black bg-white rounded-full "><Image src='/arrowback.svg' alt="" width="40" height="40" /></Link>
             </div>
-            <div className="max-w-3xl mx-auto px-4">
+            <div className="max-w-3xl mx-auto px-4 text-[#101318] dark:text-[#dfeff9] dark:bg-[#101318]">
                 <main className="mt-8">
                     {post.mainImage && (
                         <Image
@@ -55,16 +54,17 @@ export default async function PostPage({
                             width={1024}
                             height={1024}
                             priority
+                            loading="eager"
                         />
                     )}
                     <div className="flex flex-col gap-2 my-8">
                         <h1 className="text-4xl font-bold ">{post.title}</h1>
-                        <div className="flex gap-4 text-gray-700">
+                        <div className="flex gap-4 text-gray-700 dark:text-gray-400">
                             <div>By: {post.author?.name ? post.author.name : 'Anonymous'}</div>
                             <p>{post.publishedAt ? `Published:  ${new Date(post.publishedAt).toLocaleDateString()}` : ''}</p>
                         </div>
                     </div>
-                    <div className="prose lg:prose-xl">
+                    <div className="prose lg:prose-xl dark:bg-[#101318] dark:text-[#dfeff9] ">
                         {Array.isArray(post.body) && <PortableText value={post.body} />}
                     </div>
                     <div className="mt-4 mb-8">
@@ -73,7 +73,7 @@ export default async function PostPage({
                                 <span className="flex gap-2">
                                     {post.categories?.map((category: { _id: number; title: string; }) => 
                                         (
-                                            <div key={category._id} className="bg-[#dfeff9] dark:bg-[#101318] text-[#101318] dark:text-[#dfeff9] p-2 cursor-pointer font-normal rounded-2xl w-fit text-sm hover:transform hover:scale-105 duration-300">
+                                            <div key={category._id} className="dark:bg-[#dfeff9] dark:text-[#101318] bg-[#101318] text-[#dfeff9] p-2 cursor-pointer font-normal rounded-full w-fit text-sm hover:transform hover:scale-105 duration-300 px-3">
                                                 {category.title}
                                             </div>
                                         )

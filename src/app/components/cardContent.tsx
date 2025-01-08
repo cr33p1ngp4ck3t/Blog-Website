@@ -6,7 +6,6 @@ import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import React from 'react';
-import Bg from "./bg";
 
 // Sample POSTS_QUERY with comments
 const POSTS_QUERY = `*[ 
@@ -37,24 +36,24 @@ interface Props {
 export const CardContent: React.FC<Props> = ({ id, style }) => {
   const [posts, setPosts] = useState<SanityDocument[]>([]);
   // const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadTime, setLoadTime] = useState(0);
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [loadTime, setLoadTime] = useState(0);
 
-  const handleLoadClick = async () => {
-    setIsLoading(true);
-    const startTime = Date.now();
-    try {
-      const duration = Date.now() - startTime;
-      setLoadTime(duration);
-      const timeoutDuration = Math.max(duration, 1000);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, timeoutDuration);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setIsLoading(false);
-    }
-  };
+  // const handleLoadClick = async () => {
+  //   setIsLoading(true);
+  //   const startTime = Date.now();
+  //   try {
+  //     const duration = Date.now() - startTime;
+  //     setLoadTime(duration);
+  //     const timeoutDuration = Math.max(duration, 1000);
+  //     setTimeout(() => {
+  //       setIsLoading(false);
+  //     }, timeoutDuration);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,38 +77,47 @@ export const CardContent: React.FC<Props> = ({ id, style }) => {
 
   return (
     <>
-      {isLoading ? (
-        <div className="md:grid md:grid-cols-2 lg:grid lg:grid-cols-3 gap-4 items-center flex flex-col" id={id} style={style} onClick={handleLoadClick}>
-          {posts.map((post) => (
-            <Link
-              href={`/post/${post.slug.current}`}
-              className="cursor-default my-6 sm:w-[60%] md:w-full md:h-[26rem]"
-              onClick={() => handleClick(post._id)}
-              key={post._id}
-            >
-              <div className="h-[420px] border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden bg-white dark:bg-[#101318] dark:text-[#dfeff9] hover:transform hover:scale-[1.03] duration-300 shadow-sm hover:shadow-lg hover:shadow-slate-600">
-                <div className="rounded-lg overflow-hidden flex justify-center align-center w-auto h-[260px] ">
+      {/* {isLoading ? ( */}
+        <div className="sm:flex gap-4 flex flex-wrap backdrop-blur-lg justify-center items-center " id={id} style={style} >
+          {posts?.map((post) => (
+            <div key={post._id} className="my-6 sm:w-[60%] md:w-[280px] backdrop-blur-lg justify-center items-center" >
+              <div className="border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden bg-white dark:bg-[#101318] dark:text-[#dfeff9] hover:transform hover:scale-[1.03] duration-300 shadow-sm hover:shadow-lg hover:shadow-slate-600">
+                <div className="rounded-lg overflow-hidden  w-auto h-[260px] ">
+                <Link
+                  href={`/post/${post.slug.current}`}
+                  onClick={() => handleClick(post._id)}
+                >
                   <Image
                     src={urlFor(post.mainImage).url()}
                     alt={post.title}
                     height="1024"
-                    width="1024"
-                    className="object-cover bg-center cursor-pointer"
+                    width="280"
+                    className="object-cover bg-center cursor-pointer w-auto h-auto"
                     priority
                   />
+                </Link>
                 </div>
                 <div className="py-6 px-4 flex flex-col h-[160px] justify-between bg-white dark:bg-[#101318] text-[#101318] dark:text-[#dfeff9]">
                   <div>
                     <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1 dark:text-[#dfeff9] hover:transform hover:scale-[1.02] duration-300 cursor-pointer">
                       {post.categories ? post.categories.map((category: { title: string }) => category.title).join(', ') : 'None'}
                     </h2>
-                    <h1 className="title-font text-lg font-medium text-gray-900 mb-3 dark:text-[#dfeff9] cursor-pointer hover:transform hover:scale-[1.02] duration-300">
-                      {post.title}
-                    </h1>
+                    <Link
+                      href={`/post/${post.slug.current}`}
+                      onClick={() => handleClick(post._id)}
+                    >
+                      <h1 className="title-font text-lg font-medium text-gray-900 mb-3 dark:text-[#dfeff9] cursor-pointer hover:transform hover:scale-[1.02] duration-300">
+                        {post.title}
+                      </h1>
+                  </Link>
                   </div>
                   <div>
-                    <span className="hidden">{loadTime}</span>
+                    {/* <span className="hidden">{loadTime}</span> */}
                     <div className="flex items-center flex-wrap justify-between">
+                    <Link
+                      href={`/post/${post.slug.current}`}
+                      onClick={() => handleClick(post._id)}
+                    >
                       <div className="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0 hover:transform hover:scale-[1.05] cursor-pointer duration-300">
                         Learn More
                         <svg
@@ -125,6 +133,7 @@ export const CardContent: React.FC<Props> = ({ id, style }) => {
                           <path d="M12 5l7 7-7 7"></path>
                         </svg>
                       </div>
+                    </Link>
                       <div className="flex items-center">
                         <span className="text-gray-400 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm py-1  hover:transform hover:scale-[1.2] duration-300 cursor-pointer">
                           <svg
@@ -161,15 +170,15 @@ export const CardContent: React.FC<Props> = ({ id, style }) => {
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
-      ) : (
-        <div className="flex justify-center items-center fixed rounded-lg bottom-0 right-0 text-white p-6 z-50 text-2xl font-bold h-screen w-screen">
-          <Bg />
-          <Image src="/loader.svg" alt="" width={30} height={30} />
-        </div>
-      )}
+      {/* // ) : (
+      //   <div className="flex justify-center items-center fixed rounded-lg bottom-0 right-0 text-white p-6 z-50 text-2xl font-bold h-screen w-screen">
+      //     <Bg />
+      //     <Image src="/loader.svg" alt="" width={30} height={30} />
+      //   </div>
+      // )} */}
     </>
   );
 };
