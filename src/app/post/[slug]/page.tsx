@@ -5,7 +5,6 @@ import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import Image from "next/image";
 import Comments from "@/app/components/comments";
-import Link from "next/link";
 
 const builder = imageUrlBuilder(client);
 
@@ -28,67 +27,70 @@ async function getPost(slug: string) {
 }
 
 interface PageProps {
-    params: Promise<{
+    params: {
         slug: string;
-    }>;
+    };
 }
 
-export default async function PostPage({
-    params,
-}: PageProps) {
-    const awaitedParams = await params;
-    const post = await getPost(awaitedParams.slug);
+export default async function PostPage({ params }: PageProps) {
+    const post = await getPost(params.slug);
+
+    if (!post) {
+        return <div>Post not found</div>;
+    }
 
     return (
-        <>
-            <div className="sticky left-[6%] top-[14%] flex justify-center items-center w-12 h-12 bg-scroll scroll-smooth hover:transform hover:scale-105 duration-300 ">
-                <Link href="/" className="hover:underline text-black bg-white rounded-full "><Image src='/arrowback.svg' alt="" width="40" height="40" /></Link>
-            </div>
-            <div className="max-w-3xl mx-auto px-4 text-[#101318] dark:text-[#dfeff9] dark:bg-[#101318]">
-                <main className="mt-8">
-                    {post.mainImage && (
+        <main className="max-w-3xl mx-auto px-4 py-12 md:py-20">
+            <article>
+                <header className="mb-8">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight">
+                        {post.title}
+                    </h1>
+                    <div className="mt-4 flex gap-4 text-sm text-gray-500 dark:text-gray-400">
+                        <span>By: {post.author?.name ?? 'Anonymous'}</span>
+                        <span>
+                            {post.publishedAt ? `Published on ${new Date(post.publishedAt).toLocaleDateString()}` : ''}
+                        </span>
+                    </div>
+                </header>
+
+                {post.mainImage && (
+                    <div className="mb-8">
                         <Image
                             className="object-cover object-center rounded-lg w-full h-auto"
-                            src={(urlFor(post.mainImage)).url()}
-                            alt={post.title}
-                            width={1024}
-                            height={1024}
+                            src={urlFor(post.mainImage).url()}
+                            alt={post.title ?? 'Blog post image'}
+                            width={1200}
+                            height={675}
                             priority
                             loading="eager"
                         />
+                    </div>
+                )}
+
+                <div className="prose prose-lg dark:prose-invert max-w-none text-gray-800 dark:text-gray-200">
+                    {Array.isArray(post.body) && <PortableText value={post.body} />}
+                </div>
+
+                <footer className="mt-12">
+                    {post.categories && post.categories.length > 0 && (
+                        <div className="flex items-center gap-3">
+                            <h3 className="font-semibold text-lg">Categories:</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {post.categories.map((category: { _id: string; title: string; }) => (
+                                    <div key={category._id} className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm font-medium">
+                                        {category.title}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     )}
-                    <div className="flex flex-col gap-2 my-8">
-                        <h1 className="text-4xl font-bold ">{post.title}</h1>
-                        <div className="flex gap-4 text-gray-700 dark:text-gray-400">
-                            <div>By: {post.author?.name ? post.author.name : 'Anonymous'}</div>
-                            <p>{post.publishedAt ? `Published:  ${new Date(post.publishedAt).toLocaleDateString()}` : ''}</p>
-                        </div>
+
+                    <div className="mt-12">
+                      <Comments postId={post._id} />
                     </div>
-                    <div className="prose lg:prose-xl dark:bg-[#101318] dark:text-[#dfeff9] ">
-                        {Array.isArray(post.body) && <PortableText value={post.body} />}
-                    </div>
-                    <div className="mt-4 mb-8">
-                        <div className="font-bold p-2 mb-2 flex items-center gap-3">Categories: 
-                            {post.categories ?(
-                                <span className="flex gap-2">
-                                    {post.categories?.map((category: { _id: number; title: string; }) => 
-                                        (
-                                            <div key={category._id} className="dark:bg-[#dfeff9] dark:text-[#101318] bg-[#101318] text-[#dfeff9] p-2 cursor-pointer font-normal rounded-full w-fit text-sm hover:transform hover:scale-105 duration-300 px-3">
-                                                {category.title}
-                                            </div>
-                                        )
-                                    )} 
-                                </span>
-                            ) : (
-                                <span className="text-[#101318] dark:text-[#dfeff9]">
-                                    None
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                    <Comments postId={post._id} />
-                </main>
-            </div>
-        </>
+                </footer>
+            </article>
+        </main>
     );
 }
