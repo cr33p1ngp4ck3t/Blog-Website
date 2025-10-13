@@ -8,7 +8,7 @@ export default function Home() {
           Your Trusted Guide to Financial Stability
         </h1>
         <p className="mt-4 md:mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Navigating financial assistance programs and finding the best ways to save can be overwhelming. We`${'}`re here to simplify it for you.
+          Navigating financial assistance programs and finding the best ways to save can be overwhelming. We{`'`}re here to simplify it for you.
         </p>
       </div>
 
