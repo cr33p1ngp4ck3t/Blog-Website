@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import TableOfContents from "@/app/components/TableOfContents";
 import RelatedPosts from "@/app/components/RelatedPosts";
+import AuthorBio from "@/app/components/AuthorBio";
 
 interface PageProps {
   params: {
@@ -20,7 +21,7 @@ const getPost = async (slug: string) => {
     title,
     mainImage,
     body,
-    "author": author->name,
+    "author": author->{name, image, bio},
     "categories": categories[]->title,
     "slug": slug.current,
     publishedAt
@@ -64,7 +65,7 @@ export default async function PostPage({ params }: PageProps) {
           {post.title}
         </h1>
         <div className="mt-4 text-gray-600 dark:text-gray-400">
-          <span>By {post.author}</span>
+          <span>By {post.author.name}</span>
           <span className="mx-2">•</span>
           <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
         </div>
@@ -90,6 +91,9 @@ export default async function PostPage({ params }: PageProps) {
         </div>
         <div className="prose prose-lg dark:prose-invert mt-8">
           <PortableText value={post.body} components={portableTextComponents} />
+        </div>
+        <div className="mt-8">
+          <AuthorBio author={post.author} />
         </div>
       </article>
       <div className="md:col-span-4 mt-8">

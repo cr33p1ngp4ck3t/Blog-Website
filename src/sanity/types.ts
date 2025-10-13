@@ -4,7 +4,20 @@ export interface Post {
   slug: {
     current: string;
   };
-  author: string;
+  author: {
+    name: string;
+    image: {
+      asset: {
+        _ref: string;
+        _type: string;
+      };
+    };
+    bio: {
+      _key: string;
+      style?: string;
+      children: { text: string }[];
+    }[];
+  };
   mainImage: {
     asset: {
       _ref: string;
