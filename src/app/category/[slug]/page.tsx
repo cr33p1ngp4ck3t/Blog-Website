@@ -1,9 +1,6 @@
-// src/app/category/[slug]/page.tsx
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
-export default function CategoryPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
-
-  // Capitalize the first letter and replace hyphens with spaces for a clean title
   const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
 
   return (
