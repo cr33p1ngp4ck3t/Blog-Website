@@ -6,9 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import TableOfContents from "@/app/components/TableOfContents";
+import RelatedPosts from "@/app/components/RelatedPosts";
 
 interface PageProps {
   params: {
@@ -93,6 +92,9 @@ export default async function PostPage({ params }: PageProps) {
           <PortableText value={post.body} components={portableTextComponents} />
         </div>
       </article>
+      <div className="md:col-span-4 mt-8">
+        <RelatedPosts categories={post.categories} currentPostSlug={post.slug.current} />
+      </div>
     </main>
   );
 }
