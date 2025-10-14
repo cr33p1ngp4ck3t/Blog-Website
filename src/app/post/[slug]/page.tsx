@@ -11,6 +11,7 @@ import RelatedPosts from "@/app/components/RelatedPosts";
 import AuthorBio from "@/app/components/AuthorBio";
 import SocialShare from "@/app/components/SocialShare";
 import ComparisonTable from "@/app/components/ComparisonTable";
+import ProsCons from "@/app/components/ProsCons";
 
 interface PageProps {
   params: {
@@ -120,6 +121,12 @@ interface ComparisonTableValue {
   }[];
 }
 
+interface ProsConsValue {
+  title: string;
+  pros: string[];
+  cons: string[];
+}
+
 type Children = string | React.ReactNode;
 
 const portableTextComponents = {
@@ -134,6 +141,7 @@ const portableTextComponents = {
       />
     ),
     comparisonTable: ({ value }: { value: ComparisonTableValue }) => <ComparisonTable value={value} />,
+    prosCons: ({ value }: { value: ProsConsValue }) => <ProsCons value={value} />,
   },
   block: {
     h1: ({ children }: { children: Children }) => (
