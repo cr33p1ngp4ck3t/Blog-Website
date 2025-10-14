@@ -41,6 +41,7 @@ export default function Header() {
 						<Link href="/category/government-assistance">Government Assistance</Link>
 						<Link href="/category/financial-health">Financial Health</Link>
 						<Link href="/category/home-savings">Home Savings</Link>
+						<Link href="/deals">Top Deals</Link>
 						<Search />
 					</div>
 				</nav>
