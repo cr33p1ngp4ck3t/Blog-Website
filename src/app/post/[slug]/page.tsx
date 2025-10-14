@@ -9,6 +9,7 @@ import { PortableText } from "@portabletext/react";
 import TableOfContents from "@/app/components/TableOfContents";
 import RelatedPosts from "@/app/components/RelatedPosts";
 import AuthorBio from "@/app/components/AuthorBio";
+import SocialShare from "@/app/components/SocialShare";
 
 interface PageProps {
   params: {
@@ -94,6 +95,9 @@ export default async function PostPage({ params }: PageProps) {
         </div>
         <div className="mt-8">
           <AuthorBio author={post.author} />
+        </div>
+        <div className="mt-8">
+          <SocialShare url={`/post/${post.slug.current}`} title={post.title} />
         </div>
       </article>
       <div className="md:col-span-4 mt-8">
