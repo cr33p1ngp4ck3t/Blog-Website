@@ -10,6 +10,7 @@ import TableOfContents from "@/app/components/TableOfContents";
 import RelatedPosts from "@/app/components/RelatedPosts";
 import AuthorBio from "@/app/components/AuthorBio";
 import SocialShare from "@/app/components/SocialShare";
+import ComparisonTable from "@/app/components/ComparisonTable";
 
 interface PageProps {
   params: {
@@ -111,6 +112,14 @@ interface ImageValue {
   alt?: string;
 }
 
+interface ComparisonTableValue {
+  title: string;
+  rows: {
+    productName: string;
+    features: string[];
+  }[];
+}
+
 type Children = string | React.ReactNode;
 
 const portableTextComponents = {
@@ -124,6 +133,7 @@ const portableTextComponents = {
         className="rounded-lg"
       />
     ),
+    comparisonTable: ({ value }: { value: ComparisonTableValue }) => <ComparisonTable value={value} />,
   },
   block: {
     h1: ({ children }: { children: Children }) => (
