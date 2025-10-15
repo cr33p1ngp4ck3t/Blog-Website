@@ -58,6 +58,8 @@ export default async function PostPage({ params }: PageProps) {
     notFound();
   }
 
+  const { src, blurDataURL } = await urlFor(post.mainImage);
+
   return (
     <main className="max-w-5xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-8">
       <div className="md:col-span-1">
@@ -85,11 +87,13 @@ export default async function PostPage({ params }: PageProps) {
         </div>
         <div className="mt-8">
           <Image
-            src={urlFor(post.mainImage).url()}
+            src={src}
             alt={post.title}
             width={800}
             height={400}
             className="rounded-lg"
+            placeholder="blur"
+            blurDataURL={blurDataURL}
           />
         </div>
         <div className="prose prose-lg dark:prose-invert mt-8">
