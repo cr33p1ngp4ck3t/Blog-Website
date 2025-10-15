@@ -5,10 +5,7 @@ import { getPlaiceholder } from "plaiceholder";
 const builder = imageUrlBuilder(client);
 
 interface SanityImageSource {
-  asset: {
-    _ref: string;
-    _type: string;
-  };
+  asset: string;
 }
 
 export async function urlFor(source: SanityImageSource) {
