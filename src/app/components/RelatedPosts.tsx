@@ -30,19 +30,19 @@ export default async function RelatedPosts({ categories, currentPostSlug }: Rela
 	return (
 		<div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
 			<h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Related Posts</h2>
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				{relatedPosts.map((post) => (
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+				{relatedPosts.map((post, index) => (
 					<Link
-						key={post.slug.current}
-						href={`/post/${post.slug.current}`}
+						key={index}
+						href={`/post/${post.slug}`}
 						className="border rounded-lg overflow-hidden block bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
 					>
 						<Image
-							src={urlFor(post.mainImage).auto("format").url()}
+							src={urlFor(post.mainImage.asset).auto("format").url()}
 							alt={post.title}
 							width={400}
 							height={200}
-							className="object-cover"
+							className="object-cover w-auto"
 						/>
 						<div className="p-4">
 							<h3 className="text-lg font-semibold text-gray-900 dark:text-white">

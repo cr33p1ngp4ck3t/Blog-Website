@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Search from "./Search";
+import { Menu, X } from "lucide-react";
 
 /**
  * Header component that renders a navigational bar with links.
@@ -30,22 +31,46 @@ export default function Header() {
 		};
 	}, []);
 
+	const [menu, setMenu] = useState(false);
+
 	return (
-		<div className="navbar bg-white dark:bg-transparent sticky top-0 z-[100] transition-all duration-300 backdrop-blur dark:text-[#dfeff9] border-b border-gray-200 dark:border-gray-800">
-			<div className="flex justify-between items-center p-4 px-6 max-w-5xl mx-auto">
-				<div className="text-2xl font-bold">
-					<Link href="/">FinAid Hub</Link>
-				</div>
-				<nav>
-					<div className="flex gap-6 items-center font-medium">
+		<>
+			{menu && (
+				<div className="fixed inset-0 z-50 h-screen w-auto bg-white py-24 px-16">
+					<X
+						onClick={() => {
+							setMenu((prev) => !prev);
+						}}
+					/>
+					<div className="flex flex-col gap-6 font my-6">
 						<Link href="/category/government-assistance">Government Assistance</Link>
 						<Link href="/category/financial-health">Financial Health</Link>
 						<Link href="/category/home-savings">Home Savings</Link>
 						<Link href="/deals">Top Deals</Link>
-						<Search />
 					</div>
-				</nav>
+				</div>
+			)}
+			<div className="navbar bg-white dark:bg-transparent sticky top-0 z-40 transition-all duration-300 shadow backdrop-blur dark:text-[#dfeff9] border-b border-gray-200 dark:border-gray-800">
+				<div className="flex justify-between items-center p-4 px-6 max-w-7xl mx-auto">
+					<div className="text-2xl font-bold">
+						<Link href="/">FinAid Hub</Link>
+					</div>
+					<nav className="hidden md:block">
+						<div className="flex gap-6 items-center font-medium">
+							<Link href="/category/government-assistance">
+								Government Assistance
+							</Link>
+							<Link href="/category/financial-health">Financial Health</Link>
+							<Link href="/category/home-savings">Home Savings</Link>
+							<Link href="/deals">Top Deals</Link>
+							<Search />
+						</div>
+					</nav>
+					<nav className="md:hidden flex items-center justify-center">
+						<Menu onClick={() => setMenu((prev) => !prev)} />
+					</nav>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }

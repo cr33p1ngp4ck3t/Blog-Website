@@ -3,13 +3,6 @@ import { client } from "./client";
 
 const builder = imageUrlBuilder(client);
 
-interface SanityImageSource {
-  asset: {
-    _ref: string;
-    _type: string;
-  };
-}
-
-export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
+export function urlFor(source: string) {
+	return builder.image(source);
 }

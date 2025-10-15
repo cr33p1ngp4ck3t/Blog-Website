@@ -1,6 +1,5 @@
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { SanityDocument } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { PortableText } from "@portabletext/react";
@@ -12,50 +11,43 @@ import AuthorBio from "@/app/components/AuthorBio";
 import SocialShare from "@/app/components/SocialShare";
 import RelatedPosts from "@/app/components/RelatedPosts";
 import { Metadata } from "next";
-
 import { PortableTextBlock } from "sanity";
 
-interface Post extends SanityDocument {
+interface Block {
+	_key: string;
+	_type: string;
+	style?: string;
+	children: { text: string }[];
+}
+
+interface Post {
 	title: string;
-	slug: {
-		current: string;
-	};
+	slug: string;
 	author: {
 		name: string;
 		slug: {
 			current: string;
 		};
 		image: {
-			asset: {
-				_ref: string;
-				_type: string;
-			};
+			asset: string;
 			alt: string;
 		};
 		bio: PortableTextBlock[];
 	};
 	mainImage: {
-		asset: {
-			_ref: string;
-			_type: string;
-		};
+		asset: string;
 		alt: string;
 	};
-	categories: {
-		title: string;
-		slug: {
-			current: string;
-		};
-	}[];
+	categories: string[];
 	publishedAt: string;
-	body: PortableTextBlock[];
+	body: Block[];
 	excerpt: string;
 }
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		slug: string;
-	};
+	}>;
 }
 
 const getPost = async (slug: string) => {
@@ -76,7 +68,7 @@ const getPost = async (slug: string) => {
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-	const post: Post = await getPost(params.slug);
+	const post: Post = await getPost((await params).slug);
 	if (!post) {
 		return {
 			title: "Not Found",
@@ -91,64 +83,73 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function PostPage({ params }: PageProps) {
-	const post: Post = await getPost(params.slug);
+	const post: Post = await getPost((await params).slug);
 
 	if (!post) {
 		notFound();
 	}
 
 	return (
-		<main className="max-w-5xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-8">
-			<div className="md:col-span-1">
-				<TableOfContents body={post.body} />
+		// Rows
+		<main className="max-w-7xl mx-auto px-6 py-12 md:py-20 grid md:grid-flow-row gap-8">
+			{/* Column 1 */}
+			<div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+				<div className="md:col-span-1">
+					<TableOfContents body={post.body} />
+				</div>
+				<article className="md:col-span-3">
+					<h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+						{post.title}
+					</h1>
+					<div className="mt-4 text-gray-600 dark:text-gray-400">
+						<span>By {post.author ? post.author.name : "Anonymous"}</span>
+						<span className="mx-2">•</span>
+						<span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+					</div>
+					<div className="mt-6">
+						{post.categories.map((category, index) => (
+							<Link
+								key={index}
+								href={`/category/${category.toLowerCase().replace(/ /g, "-")}`}
+								className="inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200 mr-2"
+							>
+								{category}
+							</Link>
+						))}
+					</div>
+					<div className="mt-8">
+						<Image
+							src={urlFor(post.mainImage.asset).auto("format").url()}
+							alt={post.title}
+							width={800}
+							height={400}
+							className="rounded-lg"
+						/>
+					</div>
+					<div className="prose prose-lg dark:prose-invert mt-8">
+						<PortableText value={post.body} components={portableTextComponents} />
+					</div>
+					<div className="mt-8">
+						<AuthorBio author={post.author} />
+					</div>
+					<div className="mt-8">
+						<SocialShare url={`/post/${post.slug}`} title={post.title} />
+					</div>
+				</article>
 			</div>
-			<article className="md:col-span-3">
-				<h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-					{post.title}
-				</h1>
-				<div className="mt-4 text-gray-600 dark:text-gray-400">
-					<span>By {post.author.name}</span>
-					<span className="mx-2">•</span>
-					<span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+			{/* column 2 */}
+			<div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+				<div className="md:col-span-1 	"></div>
+				<div className="md:col-span-3 mt-8">
+					<RelatedPosts categories={post.categories} currentPostSlug={post.slug} />
 				</div>
-				<div className="mt-6">
-					{post.categories.map((category: string) => (
-						<Link
-							key={category}
-							href={`/category/${category.toLowerCase().replace(/ /g, "-")}`}
-							className="inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200 mr-2"
-						>
-							{category}
-						</Link>
-					))}
-				</div>
-				<div className="mt-8">
-					<Image
-						src={urlFor(post.mainImage).auto("format").url()}
-						alt={post.title}
-						width={800}
-						height={400}
-						className="rounded-lg"
-					/>
-				</div>
-				<div className="prose prose-lg dark:prose-invert mt-8">
-					<PortableText value={post.body} components={portableTextComponents} />
-				</div>
-				<div className="mt-8">
-					<AuthorBio author={post.author} />
-				</div>
-				<div className="mt-8">
-					<SocialShare url={`/post/${post.slug.current}`} title={post.title} />
-				</div>
-			</article>
-			<div className="md:col-span-4 mt-8">
-				<RelatedPosts categories={post.categories} currentPostSlug={post.slug.current} />
 			</div>
 		</main>
 	);
 }
 
 interface ImageValue {
+	src: string;
 	alt?: string;
 }
 
@@ -168,11 +169,15 @@ interface ProsConsValue {
 
 type Children = string | React.ReactNode;
 
+interface ChildrenProps {
+	children?: Children;
+}
+
 const portableTextComponents = {
 	types: {
 		image: ({ value }: { value: ImageValue }) => (
 			<Image
-				src={urlFor(value).auto("format").url()}
+				src={urlFor(value.src).auto("format").url()}
 				alt={value.alt || " "}
 				width={800}
 				height={400}
@@ -185,30 +190,38 @@ const portableTextComponents = {
 		prosCons: ({ value }: { value: ProsConsValue }) => <ProsCons value={value} />,
 	},
 	block: {
-		h1: ({ children }: { children: Children }) => (
+		h1: ({ children }: ChildrenProps) => (
 			<h1
 				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white"
+				className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
 			>
 				{children}
 			</h1>
 		),
-		h2: ({ children }: { children: Children }) => (
+		h2: ({ children }: ChildrenProps) => (
 			<h2
 				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white"
+				className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
 			>
 				{children}
 			</h2>
 		),
-		h3: ({ children }: { children: Children }) => (
+		h3: ({ children }: ChildrenProps) => (
 			<h3
 				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white"
+				className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
 			>
 				{children}
 			</h3>
 		),
-		normal: ({ children }: { children: Children }) => <p>{children}</p>,
+		h4: ({ children }: ChildrenProps) => (
+			<h4
+				id={String(children).toLowerCase().replace(/ /g, "-")}
+				className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
+			>
+				{children}
+			</h4>
+		),
+		normal: ({ children }: ChildrenProps) => <p>{children}</p>,
 	},
 };
