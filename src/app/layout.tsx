@@ -4,6 +4,7 @@ import Header from "./components/header";
 import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import Footer from "./components/footer";
+import { SanityLive } from "@/sanity/lib/client";
 
 export const metadata: Metadata = {
 	title: {
@@ -51,6 +52,7 @@ export default function RootLayout({
 				className={`${inter.className} antialiased dark:bg-[#101318] text-[#101318] dark:text-[#dfeff9] scroll-smooth`}
 			>
 				<Header />
+				<SanityLive />
 				{children}
 				<Analytics />
 				<Footer />
