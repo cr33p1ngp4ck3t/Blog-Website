@@ -42,7 +42,7 @@ export default function Header() {
 							setMenu((prev) => !prev);
 						}}
 					/>
-					<div className="flex flex-col gap-6 font">
+					<div className="flex flex-col gap-6 font my-6">
 						<Link href="/category/government-assistance">Government Assistance</Link>
 						<Link href="/category/financial-health">Financial Health</Link>
 						<Link href="/category/home-savings">Home Savings</Link>

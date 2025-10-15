@@ -1,22 +1,53 @@
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { Post } from "@/sanity/types";
-import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
-import TableOfContents from "@/app/components/TableOfContents";
-import RelatedPosts from "@/app/components/RelatedPosts";
-import AuthorBio from "@/app/components/AuthorBio";
-import SocialShare from "@/app/components/SocialShare";
+import { notFound } from "next/navigation";
 import ComparisonTable from "@/app/components/ComparisonTable";
 import ProsCons from "@/app/components/ProsCons";
+import TableOfContents from "@/app/components/TableOfContents";
+import AuthorBio from "@/app/components/AuthorBio";
+import SocialShare from "@/app/components/SocialShare";
+import RelatedPosts from "@/app/components/RelatedPosts";
+import { Metadata } from "next";
+import { PortableTextBlock } from "sanity";
+
+interface Block {
+	_key: string;
+	_type: string;
+	style?: string;
+	children: { text: string }[];
+}
+
+interface Post {
+	title: string;
+	slug: string;
+	author: {
+		name: string;
+		slug: {
+			current: string;
+		};
+		image: {
+			asset: string;
+			alt: string;
+		};
+		bio: PortableTextBlock[];
+	};
+	mainImage: {
+		asset: string;
+		alt: string;
+	};
+	categories: string[];
+	publishedAt: string;
+	body: Block[];
+	excerpt: string;
+}
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		slug: string;
-	};
+	}>;
 }
 
 const getPost = async (slug: string) => {
@@ -39,7 +70,7 @@ const getPost = async (slug: string) => {
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-	const post: Post = await getPost(params.slug);
+	const post: Post = await getPost((await params).slug);
 	if (!post) {
 		return {
 			title: "Not Found",
@@ -142,7 +173,7 @@ export default async function PostPage({ params }: PageProps) {
 }
 
 interface ImageValue {
-	asset: string;
+	src: string;
 	alt?: string;
 }
 
@@ -170,7 +201,7 @@ const portableTextComponents = {
 	types: {
 		image: ({ value }: { value: ImageValue }) => (
 			<Image
-				src={urlFor(value).url()}
+				src={urlFor(value.src).auto("format").url()}
 				alt={value.alt || " "}
 				width={800}
 				height={400}
@@ -186,7 +217,7 @@ const portableTextComponents = {
 		h1: ({ children }: ChildrenProps) => (
 			<h1
 				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white"
+				className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
 			>
 				{children}
 			</h1>
@@ -194,7 +225,7 @@ const portableTextComponents = {
 		h2: ({ children }: ChildrenProps) => (
 			<h2
 				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white"
+				className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
 			>
 				{children}
 			</h2>
@@ -202,10 +233,18 @@ const portableTextComponents = {
 		h3: ({ children }: ChildrenProps) => (
 			<h3
 				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white"
+				className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
 			>
 				{children}
 			</h3>
+		),
+		h4: ({ children }: ChildrenProps) => (
+			<h4
+				id={String(children).toLowerCase().replace(/ /g, "-")}
+				className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
+			>
+				{children}
+			</h4>
 		),
 		normal: ({ children }: ChildrenProps) => <p>{children}</p>,
 	},
