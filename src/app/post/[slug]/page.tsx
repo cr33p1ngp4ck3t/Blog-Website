@@ -27,7 +27,9 @@ const getPost = async (slug: string) => {
     "author": author->{name, image, bio},
     "categories": categories[]->title,
     "slug": slug.current,
-    publishedAt
+    publishedAt,
+    _updatedAt,
+    "excerpt": array::join(string::split((pt::text(body)), "")[0..155], "") + "..."
   }`;
 
   const post = await client.fetch(query, { slug });
@@ -52,14 +54,44 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function PostPage({ params }: PageProps) {
-  const post: Post = await getPost(params.slug);
+  const post: Post & { _updatedAt: string; excerpt: string } = await getPost(params.slug);
 
   if (!post) {
     notFound();
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "image": urlFor(post.mainImage).url(),
+    "author": {
+      "@type": "Person",
+      "name": post.author.name,
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Financial Aid Hub",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.financialaidhub.com/logo.png",
+      },
+    },
+    "datePublished": post.publishedAt,
+    "dateModified": post._updatedAt,
+    "description": post.excerpt,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${process.env.NEXT_PUBLIC_BASE_URL}/post/${post.slug.current}`,
+    },
+  };
+
   return (
     <main className="max-w-5xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="md:col-span-1">
         <TableOfContents body={post.body} />
       </div>
