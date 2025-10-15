@@ -7,14 +7,11 @@ export interface Post {
 	author: {
 		name: string;
 		image: {
-			asset: {
-				_ref: string;
-				_type: string;
-			};
+			asset: string;
 		};
 		bio: {
 			_key: string;
-			_type?: string;
+			_type: string;
 			style?: string;
 			children: { text: string }[];
 		}[];
@@ -26,6 +23,7 @@ export interface Post {
 	publishedAt: string;
 	body: {
 		_key: string;
+		_type: string;
 		style?: string;
 		children: { text: string }[];
 	}[];
