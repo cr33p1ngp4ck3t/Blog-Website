@@ -170,7 +170,7 @@ const portableTextComponents = {
 	types: {
 		image: ({ value }: { value: ImageValue }) => (
 			<Image
-				src={urlFor(value.asset).url()}
+				src={urlFor(value).url()}
 				alt={value.alt || " "}
 				width={800}
 				height={400}

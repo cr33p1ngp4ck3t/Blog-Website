@@ -7,22 +7,17 @@ export interface Post {
 	author: {
 		name: string;
 		image: {
-			asset: {
-				_ref: string;
-				_type: string;
-			};
+			asset: string;
 		};
 		bio: {
 			_key: string;
+			_type: string;
 			style?: string;
 			children: { text: string }[];
 		}[];
 	};
 	mainImage: {
-		asset: {
-			_ref: string;
-			_type: string;
-		};
+		asset: string;
 	};
 	categories: string[];
 	publishedAt: string;
