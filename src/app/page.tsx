@@ -12,6 +12,8 @@ interface Post extends SanityDocument {
 	mainImage: {
 		asset: string;
 		alt: string;
+		src: string;
+		blurDataURL: string;
 	};
 	excerpt: string;
 }
@@ -26,7 +28,22 @@ async function getPosts() {
     mainImage,
     "excerpt": array::join(string::split((pt::text(body)), "")[0..120], "") + "..."
   }`);
-	return posts;
+
+	const postsWithBlurData = await Promise.all(
+		posts.map(async (post) => {
+			const { src, blurDataURL } = await urlFor(post.mainImage);
+			return {
+				...post,
+				mainImage: {
+					...post.mainImage,
+					src,
+					blurDataURL,
+				},
+			};
+		})
+	);
+
+	return postsWithBlurData;
 }
 
 export default async function Home() {
@@ -94,10 +111,12 @@ export default async function Home() {
 						>
 							<div className="relative h-48 w-full">
 								<Image
-									src={urlFor(post.mainImage.asset).auto("format").url()}
+									src={post.mainImage.src}
 									alt={`${post.mainImage.alt}`}
 									fill
 									className="object-cover rounded-md"
+									placeholder="blur"
+									blurDataURL={post.mainImage.blurDataURL}
 								/>
 							</div>
 							<h3 className="mt-4 text-xl font-semibold text-gray-900 dark:text-white">

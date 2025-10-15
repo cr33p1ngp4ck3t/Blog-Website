@@ -85,7 +85,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function PostPage({ params }: PageProps) {
-	const post: Post & { _updatedAt: string; excerpt: string } = await getPost(params.slug);
+  const post: Post = await getPost(params.slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  const { src, blurDataURL } = await urlFor(post.mainImage);
+const post: Post & { _updatedAt: string; excerpt: string } = await getPost(params.slug);
 
 	if (!post) {
 		notFound();
@@ -117,59 +124,61 @@ export default async function PostPage({ params }: PageProps) {
 		},
 	};
 
-	return (
-		<main className="max-w-5xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-8">
-			<script
+  return (
+    <main className="max-w-5xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="md:col-span-1">
+        <script
 				type="application/ld+json"
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 			/>
-			<div className="md:col-span-1">
-				<TableOfContents body={post.body} />
-			</div>
-			<article className="md:col-span-3">
-				<h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-					{post.title}
-				</h1>
-				<div className="mt-4 text-gray-600 dark:text-gray-400">
-					<span>By {post.author.name}</span>
-					<span className="mx-2">•</span>
-					<span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-				</div>
-				<div className="mt-6">
-					{post.categories.map((category: string) => (
-						<Link
-							key={category}
-							href={`/category/${category.toLowerCase().replace(/ /g, "-")}`}
-							className="inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200 mr-2"
-						>
-							{category}
-						</Link>
-					))}
-				</div>
-				<div className="mt-8">
-					<Image
-						src={urlFor(post.mainImage).url()}
-						alt={post.title}
-						width={800}
-						height={400}
-						className="rounded-lg"
-					/>
-				</div>
-				<div className="prose prose-lg dark:prose-invert mt-8">
-					<PortableText value={post.body} components={portableTextComponents} />
-				</div>
-				<div className="mt-8">
-					<AuthorBio author={post.author} />
-				</div>
-				<div className="mt-8">
-					<SocialShare url={`/post/${post.slug.current}`} title={post.title} />
-				</div>
-			</article>
-			<div className="md:col-span-4 mt-8">
-				<RelatedPosts categories={post.categories} currentPostSlug={post.slug.current} />
-			</div>
-		</main>
-	);
+        <TableOfContents body={post.body} />
+      </div>
+      <article className="md:col-span-3">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+          {post.title}
+        </h1>
+        <div className="mt-4 text-gray-600 dark:text-gray-400">
+          <span>By {post.author.name}</span>
+          <span className="mx-2">•</span>
+          <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+        </div>
+        <div className="mt-6">
+          {post.categories.map((category: string) => (
+            <Link
+              key={category}
+              href={`/category/${category.toLowerCase().replace(/ /g, "-")}`}
+              className="inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200 mr-2"
+            >
+              {category}
+            </Link>
+          ))}
+        </div>
+        <div className="mt-8">
+          <Image
+            src={src}
+            alt={post.title}
+            width={800}
+            height={400}
+            className="rounded-lg"
+            placeholder="blur"
+            blurDataURL={blurDataURL}
+          />
+        </div>
+        <div className="prose prose-lg dark:prose-invert mt-8">
+          <PortableText value={post.body} components={portableTextComponents} />
+        </div>
+        <div className="mt-8">
+          <AuthorBio author={post.author} />
+        </div>
+        <div className="mt-8">
+          <SocialShare url={`/post/${post.slug.current}`} title={post.title} />
+        </div>
+      </article>
+      <div className="md:col-span-4 mt-8">
+        <RelatedPosts categories={post.categories} currentPostSlug={post.slug.current} />
+      </div>
+    </main>
+  );
 }
 
 interface ImageValue {
