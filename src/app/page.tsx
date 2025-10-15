@@ -18,10 +18,14 @@ interface Post extends SanityDocument {
 	excerpt: string;
 }
 
-async function getPosts() {
+const POSTS_PER_PAGE = 6;
+
+async function getPosts(page: number) {
+	const start = (page - 1) * POSTS_PER_PAGE;
+	const end = start + POSTS_PER_PAGE;
 	const posts = await client.fetch<
 		Post[]
-	>(`*[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...3] {
+	>(`*[_type == "post" && defined(slug.current)] | order(publishedAt desc)[${start}...${end}] {
     _id,
     title,
     slug,
@@ -46,8 +50,13 @@ async function getPosts() {
 	return postsWithBlurData;
 }
 
-export default async function Home() {
-	const posts = await getPosts();
+export default async function Home({
+	searchParams,
+}: {
+	searchParams: { [key: string]: string | string[] | undefined };
+}) {
+	const page = typeof searchParams.page === "string" ? Number(searchParams.page) : 1;
+	const posts = await getPosts(page);
 
 	return (
 		<main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
@@ -127,6 +136,30 @@ export default async function Home() {
 							</p>
 						</Link>
 					))}
+				</div>
+				<div className="mt-8 flex justify-center space-x-4">
+					{page > 1 && (
+						<Link
+							href={{
+								pathname: "/",
+								query: { page: page - 1 },
+							}}
+							className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md"
+						>
+							Previous
+						</Link>
+					)}
+					{posts.length === POSTS_PER_PAGE && (
+						<Link
+							href={{
+								pathname: "/",
+								query: { page: page + 1 },
+							}}
+							className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md"
+						>
+							Next
+						</Link>
+					)}
 				</div>
 			</div>
 		</main>

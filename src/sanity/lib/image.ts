@@ -1,7 +1,6 @@
 import imageUrlBuilder from "@sanity/image-url";
 import { client } from "./client";
 import { getPlaiceholder } from "plaiceholder";
-
 const builder = imageUrlBuilder(client);
 
 interface SanityImageSource {
