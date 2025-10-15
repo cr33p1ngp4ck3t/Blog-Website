@@ -1,87 +1,54 @@
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
+import { Post } from "@/sanity/types";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { PortableText } from "@portabletext/react";
 import { notFound } from "next/navigation";
-import ComparisonTable from "@/app/components/ComparisonTable";
-import ProsCons from "@/app/components/ProsCons";
+import { PortableText } from "@portabletext/react";
 import TableOfContents from "@/app/components/TableOfContents";
+import RelatedPosts from "@/app/components/RelatedPosts";
 import AuthorBio from "@/app/components/AuthorBio";
 import SocialShare from "@/app/components/SocialShare";
-import RelatedPosts from "@/app/components/RelatedPosts";
-import { Metadata } from "next";
-import { PortableTextBlock } from "sanity";
-
-interface Block {
-	_key: string;
-	_type: string;
-	style?: string;
-	children: { text: string }[];
-}
-
-interface Post {
-	title: string;
-	slug: string;
-	author: {
-		name: string;
-		slug: {
-			current: string;
-		};
-		image: {
-			asset: string;
-			alt: string;
-		};
-		bio: PortableTextBlock[];
-	};
-	mainImage: {
-		asset: string;
-		alt: string;
-	};
-	categories: string[];
-	publishedAt: string;
-	body: Block[];
-	excerpt: string;
-}
+import ComparisonTable from "@/app/components/ComparisonTable";
+import ProsCons from "@/app/components/ProsCons";
 
 interface PageProps {
-	params: Promise<{
-		slug: string;
-	}>;
+  params: {
+    slug: string;
+  };
 }
 
 const getPost = async (slug: string) => {
-	const query = `*[_type == "post" && slug.current == $slug][0] {
+  const query = `*[_type == "post" && slug.current == $slug][0] {
     title,
     mainImage,
     body,
     "author": author->{name, image, bio},
     "categories": categories[]->title,
     "slug": slug.current,
-    publishedAt,
-    _updatedAt,
-    "excerpt": array::join(string::split((pt::text(body)), "")[0..155], "") + "..."
+    publishedAt
   }`;
 
-	const post = await client.fetch(query, { slug });
-	return post;
+  const post = await client.fetch(query, { slug });
+  return post;
 };
 
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-	const post: Post = await getPost((await params).slug);
-	if (!post) {
-		return {
-			title: "Not Found",
-			description: "The page you are looking for does not exist.",
-		};
-	}
+  const post: Post = await getPost(params.slug);
+  if (!post) {
+    return {
+      title: "Not Found",
+      description: "The page you are looking for does not exist.",
+    };
+  }
 
-	return {
-		title: post.title,
-		description: "A blog post about " + post.title,
-	};
+  return {
+    title: post.title,
+    description: "A blog post about " + post.title,
+  };
 }
 
 export default async function PostPage({ params }: PageProps) {
@@ -91,46 +58,9 @@ export default async function PostPage({ params }: PageProps) {
     notFound();
   }
 
-  const { src, blurDataURL } = await urlFor(post.mainImage);
-const post: Post & { _updatedAt: string; excerpt: string } = await getPost(params.slug);
-
-	if (!post) {
-		notFound();
-	}
-
-	const jsonLd = {
-		"@context": "https://schema.org",
-		"@type": "BlogPosting",
-		headline: post.title,
-		image: urlFor(post.mainImage).url(),
-		author: {
-			"@type": "Person",
-			name: post.author.name,
-		},
-		publisher: {
-			"@type": "Organization",
-			name: "Financial Aid Hub",
-			logo: {
-				"@type": "ImageObject",
-				url: "https://www.financialaidhub.com/logo.png",
-			},
-		},
-		datePublished: post.publishedAt,
-		dateModified: post._updatedAt,
-		description: post.excerpt,
-		mainEntityOfPage: {
-			"@type": "WebPage",
-			"@id": `${process.env.NEXT_PUBLIC_BASE_URL}/post/${post.slug.current}`,
-		},
-	};
-
   return (
     <main className="max-w-5xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-8">
       <div className="md:col-span-1">
-        <script
-				type="application/ld+json"
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-			/>
         <TableOfContents body={post.body} />
       </div>
       <article className="md:col-span-3">
@@ -155,13 +85,11 @@ const post: Post & { _updatedAt: string; excerpt: string } = await getPost(param
         </div>
         <div className="mt-8">
           <Image
-            src={src}
+            src={urlFor(post.mainImage).url()}
             alt={post.title}
             width={800}
             height={400}
             className="rounded-lg"
-            placeholder="blur"
-            blurDataURL={blurDataURL}
           />
         </div>
         <div className="prose prose-lg dark:prose-invert mt-8">
@@ -182,79 +110,57 @@ const post: Post & { _updatedAt: string; excerpt: string } = await getPost(param
 }
 
 interface ImageValue {
-	src: string;
-	alt?: string;
+  alt?: string;
 }
 
 interface ComparisonTableValue {
-	title: string;
-	rows: {
-		productName: string;
-		features: string[];
-	}[];
+  title: string;
+  rows: {
+    productName: string;
+    features: string[];
+  }[];
 }
 
 interface ProsConsValue {
-	title: string;
-	pros: string[];
-	cons: string[];
+  title: string;
+  pros: string[];
+  cons: string[];
 }
 
 type Children = string | React.ReactNode;
 
-interface ChildrenProps {
-	children?: Children;
-}
-
 const portableTextComponents = {
-	types: {
-		image: ({ value }: { value: ImageValue }) => (
-			<Image
-				src={urlFor(value.src).auto("format").url()}
-				alt={value.alt || " "}
-				width={800}
-				height={400}
-				className="rounded-lg"
-			/>
-		),
-		comparisonTable: ({ value }: { value: ComparisonTableValue }) => (
-			<ComparisonTable value={value} />
-		),
-		prosCons: ({ value }: { value: ProsConsValue }) => <ProsCons value={value} />,
-	},
-	block: {
-		h1: ({ children }: ChildrenProps) => (
-			<h1
-				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
-			>
-				{children}
-			</h1>
-		),
-		h2: ({ children }: ChildrenProps) => (
-			<h2
-				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
-			>
-				{children}
-			</h2>
-		),
-		h3: ({ children }: ChildrenProps) => (
-			<h3
-				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
-			>
-				{children}
-			</h3>
-		),
-		h4: ({ children }: ChildrenProps) => (
-			<h4
-				id={String(children).toLowerCase().replace(/ /g, "-")}
-				className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white my-4 mb-2"
-			>
-				{children}
-			</h4>
-		),
-		normal: ({ children }: ChildrenProps) => <p>{children}</p>,
-	},
+  types: {
+    image: ({ value }: { value: ImageValue }) => (
+      <Image
+        src={urlFor(value).url()}
+        alt={value.alt || " "}
+        width={800}
+        height={400}
+        className="rounded-lg"
+      />
+    ),
+    comparisonTable: ({ value }: { value: ComparisonTableValue }) => <ComparisonTable value={value} />,
+    prosCons: ({ value }: { value: ProsConsValue }) => <ProsCons value={value} />,
+  },
+  block: {
+    h1: ({ children }: { children: Children }) => (
+      <h1 id={String(children).toLowerCase().replace(/ /g, "-")} className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }: { children: Children }) => (
+      <h2 id={String(children).toLowerCase().replace(/ /g, "-")} className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }: { children: Children }) => (
+      <h3 id={String(children).toLowerCase().replace(/ /g, "-")} className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+        {children}
+      </h3>
+    ),
+    normal: ({ children }: { children: Children }) => (
+      <p>{children}</p>
+    ),
+  },
 };
