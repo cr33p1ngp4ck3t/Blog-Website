@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Highlight from "./Highlight";
 
 interface Post {
   _id: string;
@@ -30,20 +31,25 @@ export default function Search() {
     };
   }, []);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query) return;
+  useEffect(() => {
+    const debounceSearch = setTimeout(async () => {
+      if (query) {
+        setLoading(true);
+        const response = await fetch(`/api/search?query=${query}`);
+        const data = await response.json();
+        setResults(data);
+        setLoading(false);
+      } else {
+        setResults([]);
+      }
+    }, 300); // 300ms debounce delay
 
-    setLoading(true);
-    const response = await fetch(`/api/search?query=${query}`);
-    const data = await response.json();
-    setResults(data);
-    setLoading(false);
-  };
+    return () => clearTimeout(debounceSearch);
+  }, [query]);
 
   return (
     <div className="relative" ref={searchRef}>
-      <form onSubmit={handleSearch}>
+      <form>
         <input
           type="text"
           value={query}
@@ -58,7 +64,7 @@ export default function Search() {
           {results.map((post: Post) => (
             <li key={post._id}>
               <Link href={`/post/${post.slug.current}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                {post.title}
+                <Highlight text={post.title} query={query} />
               </Link>
             </li>
           ))}
