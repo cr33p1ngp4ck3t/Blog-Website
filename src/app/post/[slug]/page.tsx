@@ -1,17 +1,56 @@
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { Post } from "@/sanity/types";
-import { Metadata } from "next";
+import { SanityDocument } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
-import TableOfContents from "@/app/components/TableOfContents";
-import RelatedPosts from "@/app/components/RelatedPosts";
-import AuthorBio from "@/app/components/AuthorBio";
-import SocialShare from "@/app/components/SocialShare";
+import { notFound } from "next/navigation";
 import ComparisonTable from "@/app/components/ComparisonTable";
 import ProsCons from "@/app/components/ProsCons";
+import TableOfContents from "@/app/components/TableOfContents";
+import AuthorBio from "@/app/components/AuthorBio";
+import SocialShare from "@/app/components/SocialShare";
+import RelatedPosts from "@/app/components/RelatedPosts";
+import { Metadata } from "next";
+
+import { PortableTextBlock } from "sanity";
+
+interface Post extends SanityDocument {
+	title: string;
+	slug: {
+		current: string;
+	};
+	author: {
+		name: string;
+		slug: {
+			current: string;
+		};
+		image: {
+			asset: {
+				_ref: string;
+				_type: string;
+			};
+			alt: string;
+		};
+		bio: PortableTextBlock[];
+	};
+	mainImage: {
+		asset: {
+			_ref: string;
+			_type: string;
+		};
+		alt: string;
+	};
+	categories: {
+		title: string;
+		slug: {
+			current: string;
+		};
+	}[];
+	publishedAt: string;
+	body: PortableTextBlock[];
+	excerpt: string;
+}
 
 interface PageProps {
 	params: {
