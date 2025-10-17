@@ -10,6 +10,7 @@ import TableOfContents from "@/app/components/TableOfContents";
 import AuthorBio from "@/app/components/AuthorBio";
 import SocialShare from "@/app/components/SocialShare";
 import RelatedPosts from "@/app/components/RelatedPosts";
+import DisqusComments from "@/app/components/DisqusComments";
 import { Metadata } from "next";
 import { PortableTextBlock } from "sanity";
 
@@ -163,6 +164,9 @@ export default async function PostPage({ params }: PageProps) {
 				</div>
 				<div className="mt-8">
 					<AuthorBio author={post.author} />
+				</div>
+				<div className="mt-8">
+					<DisqusComments post={post} />
 				</div>
 				<div className="mt-8">
 					<SocialShare url={`/post/${post.slug}`} title={post.title} />
