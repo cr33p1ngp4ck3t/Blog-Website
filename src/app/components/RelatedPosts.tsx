@@ -38,7 +38,7 @@ export default async function RelatedPosts({ categories, currentPostSlug }: Rela
 						className="border rounded-lg overflow-hidden block bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
 					>
 						<Image
-							src={urlFor(post.mainImage).auto("format").url()}
+							src={urlFor(post.mainImage)}
 							alt={post.title}
 							width={400}
 							height={200}

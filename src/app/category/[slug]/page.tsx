@@ -23,15 +23,16 @@ const POSTS_PER_PAGE = 6;
 async function getPostsByCategory(slug: string, page: number) {
 	const start = (page - 1) * POSTS_PER_PAGE;
 	const end = start + POSTS_PER_PAGE;
-	const posts = await client.fetch<
-		Post[]
-	>(`*[_type == "post" && defined(slug.current) && $slug in categories[]->slug.current] | order(publishedAt desc)[${start}...${end}] {
+	const posts = await client.fetch<Post[]>(
+		`*[_type == "post" && defined(slug.current) && $slug in categories[]->slug.current] | order(publishedAt desc)[${start}...${end}] {
     _id,
     title,
     slug,
     mainImage,
     "excerpt": array::join(string::split((pt::text(body)), "")[0..120], "") + "..."
-  }`, { slug });
+  }`,
+		{ slug }
+	);
 
 	const postsWithBlurData = await Promise.all(
 		posts.map(async (post) => {
@@ -50,17 +51,17 @@ async function getPostsByCategory(slug: string, page: number) {
 	return postsWithBlurData;
 }
 
-interface PageProps {
-	params: {
-		slug: string;
-	};
+export default async function CategoryPage({
+	params,
+	searchParams,
+}: {
+	params: { slug: string };
 	searchParams: { [key: string]: string | string[] | undefined };
-}
-
-export default async function CategoryPage({ params, searchParams }: PageProps) {
+}) {
 	const page = typeof searchParams.page === "string" ? Number(searchParams.page) : 1;
 	const posts = await getPostsByCategory(params.slug, page);
-	const categoryName = params.slug.charAt(0).toUpperCase() + params.slug.slice(1).replace(/-/g, " ");
+	const categoryName =
+		params.slug.charAt(0).toUpperCase() + params.slug.slice(1).replace(/-/g, " ");
 
 	return (
 		<main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
