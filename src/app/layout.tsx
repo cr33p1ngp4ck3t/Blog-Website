@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import Footer from "./components/footer";
 import { SanityLive } from "@/sanity/lib/client";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 export const metadata: Metadata = {
 	title: {
@@ -47,15 +48,17 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body
 				className={`${inter.className} antialiased dark:bg-[#101318] text-[#101318] dark:text-[#dfeff9] scroll-smooth`}
 			>
-				<Header />
-				<SanityLive />
-				{children}
-				<Analytics />
-				<Footer />
+				<ThemeProvider>
+					<Header />
+					<SanityLive />
+					{children}
+					<Analytics />
+					<Footer />
+				</ThemeProvider>
 			</body>
 		</html>
 	);

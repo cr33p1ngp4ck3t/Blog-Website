@@ -10,7 +10,7 @@ interface RelatedPostsProps {
 }
 
 const getRelatedPosts = async (categories: string[], currentPostSlug: string) => {
-	const query = `*[_type == "post" && slug.current != $currentPostSlug && count((categories[]->title)[@ in $categories]) > 0] {
+	const query = `*[_type == "post" && slug.current != $currentPostSlug && count((categories[]->title)[@ in $categories]) > 0] | order(count((categories[]->title)[@ in $categories]) desc) [0...3] {
     title,
     mainImage,
     "slug": slug.current,

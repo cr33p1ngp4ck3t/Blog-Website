@@ -12,7 +12,7 @@ interface Post {
   };
 }
 
-export default function Search() {
+export default function Search({onClose}: {onClose?: () => void}) { // Add onClose prop
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
@@ -22,6 +22,9 @@ export default function Search() {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setResults([]);
+        if (onClose) {
+          onClose(); // Call onClose when clicking outside
+        }
       }
     };
 
@@ -29,7 +32,7 @@ export default function Search() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [onClose]);
 
   useEffect(() => {
     const debounceSearch = setTimeout(async () => {

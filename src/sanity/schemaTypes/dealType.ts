@@ -33,5 +33,27 @@ export const dealType = defineType({
       title: 'Brand',
       type: 'string',
     }),
+    defineField({
+      name: 'features',
+      title: 'Features',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'name',
+              title: 'Name',
+              type: 'string',
+            },
+            {
+              name: 'value',
+              title: 'Value',
+              type: 'string',
+            },
+          ],
+        },
+      ],
+    }),
   ],
 })

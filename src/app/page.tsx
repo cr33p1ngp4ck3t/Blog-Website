@@ -25,6 +25,19 @@ interface Post extends SanityDocument {
 	excerpt: string;
 }
 
+interface Deal extends SanityDocument {
+	title: string;
+	description: string;
+	link: string;
+	image: {
+		asset: string;
+		alt: string;
+		src: string;
+		blurDataURL: string;
+	};
+	brand: string;
+}
+
 const POSTS_PER_PAGE = 6;
 
 async function getPosts(page: number) {
@@ -57,6 +70,33 @@ async function getPosts(page: number) {
 	return postsWithBlurData;
 }
 
+async function getDeals() {
+	const deals = await client.fetch<Deal[]>(`*[_type == "deal"] | order(_createdAt desc) [0...5] {
+		_id,
+		title,
+		description,
+		link,
+		image,
+		brand
+	}`);
+
+	const dealsWithBlurData = await Promise.all(
+		deals.map(async (deal) => {
+			const { src, blurDataURL } = await urlFor(deal.image);
+			return {
+				...deal,
+				image: {
+					...deal.image,
+					src,
+					blurDataURL,
+				},
+			};
+		})
+	);
+
+	return dealsWithBlurData;
+}
+
 export default async function Home({
 	searchParams,
 }: {
@@ -66,6 +106,7 @@ export default async function Home({
 	const page =
 		typeof awaitedSearchParams.page === "string" ? Number(awaitedSearchParams.page) : 1;
 	const posts = await getPosts(page);
+	const deals = await getDeals();
 
 	return (
 		<main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
@@ -183,6 +224,57 @@ export default async function Home({
 							Next
 						</Link>
 					)}
+				</div>
+			</div>
+
+			<div className="mt-12 md:mt-16">
+				<h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
+					Top Deals
+				</h2>
+				<div className="mt-6 ">
+					<Carousel
+						orientation="horizontal"
+						opts={{
+							align: "center",
+							loop: true,
+						}}
+					>
+						<CarouselContent>
+							{deals.map((deal) => (
+								<CarouselItem key={deal._id} className="basis-auto md:basis-1/3">
+									<Link
+										href={deal.link}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex flex-col"
+									>
+										<div className="relative h-48 w-full">
+											<Image
+												src={deal.image.src}
+												alt={`${deal.image.alt}`}
+												fill
+												className="object-cover rounded-md"
+												placeholder="blur"
+												blurDataURL={deal.image.blurDataURL}
+											/>
+										</div>
+										<h3 className="mt-4 text-xl font-semibold text-gray-900 dark:text-white">
+											{deal.title}
+										</h3>
+										<p className="mt-2 text-gray-600 dark:text-gray-400 flex-grow">
+											{deal.description}
+										</p>
+										<p className="mt-2 text-sm font-bold text-gray-900 dark:text-white">
+											{deal.brand}
+										</p>
+									</Link>
+								</CarouselItem>
+							))}
+						</CarouselContent>
+
+						<CarouselPrevious />
+						<CarouselNext />
+					</Carousel>
 				</div>
 			</div>
 		</main>
