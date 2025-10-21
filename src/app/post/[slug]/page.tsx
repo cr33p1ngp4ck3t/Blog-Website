@@ -10,9 +10,13 @@ import TableOfContents from "@/app/components/TableOfContents";
 import AuthorBio from "@/app/components/AuthorBio";
 import SocialShare from "@/app/components/SocialShare";
 import RelatedPosts from "@/app/components/RelatedPosts";
-import DisqusComments from "@/app/components/DisqusComments";
 import { Metadata } from "next";
 import { PortableTextBlock } from "sanity";
+import dynamic from "next/dynamic";
+
+const DisqusComments = dynamic(() => import("@/app/components/DisqusComments"), {
+  ssr: false,
+});
 
 interface Block {
 	_key: string;

@@ -2,7 +2,17 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Search from "./Search";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search as SearchIcon, ChevronDown } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
+import { client } from "@/sanity/lib/client";
+
+interface Category {
+	_id: string;
+	title: string;
+	slug: {
+		current: string;
+	};
+}
 
 /**
  * Header component that renders a navigational bar with links.
@@ -11,6 +21,7 @@ import { Menu, X } from "lucide-react";
  * - Includes links to the main content categories.
  */
 export default function Header() {
+	const [categories, setCategories] = useState<Category[]>([]);
 	useEffect(() => {
 		const navbar = document.querySelector(".navbar");
 
@@ -26,12 +37,26 @@ export default function Header() {
 
 		window.addEventListener("scroll", handleScroll);
 
+		const fetchCategories = async () => {
+			const query = `*[_type == "category"] {
+				_id,
+				title,
+				slug
+			}`;
+			const data = await client.fetch(query);
+			setCategories(data);
+		};
+
+		fetchCategories();
+
 		return () => {
 			window.removeEventListener("scroll", handleScroll);
 		};
 	}, []);
 
 	const [menu, setMenu] = useState(false);
+	const [searchOpen, setSearchOpen] = useState(false);
+	const [dropdownOpen, setDropdownOpen] = useState(false);
 
 	return (
 		<>
@@ -43,10 +68,23 @@ export default function Header() {
 						}}
 					/>
 					<div className="flex flex-col gap-6 font my-6">
-						<Link href="/category/government-assistance">Government Assistance</Link>
-						<Link href="/category/financial-health">Financial Health</Link>
-						<Link href="/category/home-savings">Home Savings</Link>
+						<div className="relative">
+							<button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center gap-2">
+								Categories <ChevronDown />
+							</button>
+							{dropdownOpen && (
+								<div className="flex flex-col gap-2 mt-2">
+									{categories.map((category) => (
+										<Link key={category._id} href={`/category/${category.slug.current}`}>
+											{category.title}
+										</Link>
+									))}
+								</div>
+							)}
+						</div>
 						<Link href="/deals">Top Deals</Link>
+						<Search />
+						<ThemeToggle />
 					</div>
 				</div>
 			)}
@@ -57,13 +95,27 @@ export default function Header() {
 					</div>
 					<nav className="hidden md:block">
 						<div className="flex gap-6 items-center font-medium">
-							<Link href="/category/government-assistance">
-								Government Assistance
-							</Link>
-							<Link href="/category/financial-health">Financial Health</Link>
-							<Link href="/category/home-savings">Home Savings</Link>
+							<div className="relative">
+								<button onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)} className="flex items-center gap-2">
+									Categories <ChevronDown />
+								</button>
+								{dropdownOpen && (
+									<div onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)} className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded-md shadow-lg">
+										{categories.map((category) => (
+											<Link key={category._id} href={`/category/${category.slug.current}`} className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+												{category.title}
+											</Link>
+										))}
+									</div>
+								)}
+							</div>
 							<Link href="/deals">Top Deals</Link>
-							<Search />
+							{searchOpen ? (
+								<Search onClose={() => setSearchOpen(false)} />
+							) : (
+								<SearchIcon onClick={() => setSearchOpen(true)} />
+							)}
+							<ThemeToggle />
 						</div>
 					</nav>
 					<nav className="md:hidden flex items-center justify-center">
