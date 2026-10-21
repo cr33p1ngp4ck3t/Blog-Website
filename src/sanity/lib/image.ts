@@ -1,6 +1,8 @@
 import imageUrlBuilder from "@sanity/image-url";
 import { client } from "./client";
 import { getPlaiceholder } from "plaiceholder";
+import type { SanityImageSource as BuiltinSanityImageSource } from '@sanity/image-url/lib/types/types';
+
 const builder = imageUrlBuilder(client);
 
 interface SanityImageSource {
@@ -16,4 +18,8 @@ export async function urlFor(source: SanityImageSource) {
 		src: imageUrl,
 		blurDataURL: base64,
 	};
+}
+
+export function urlForImage(source: BuiltinSanityImageSource) {
+  return builder.image(source).auto("format").url();
 }

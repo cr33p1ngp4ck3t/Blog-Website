@@ -1,5 +1,5 @@
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
+import { urlForImage } from "@/sanity/lib/image";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -52,7 +52,7 @@ export default async function DealsPage() {
         {deals.map((deal) => (
           <Link key={deal.title} href={deal.link} target="_blank" rel="noopener noreferrer" className="border rounded-lg overflow-hidden block bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <Image
-              src={urlFor(deal.image).url()}
+              src={urlForImage(deal.image as unknown as Parameters<typeof urlForImage>[0])}
               alt={deal.title}
               width={400}
               height={200}

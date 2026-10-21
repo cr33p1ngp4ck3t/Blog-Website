@@ -100,7 +100,7 @@ async function getDeals() {
 export default async function Home({
 	searchParams,
 }: {
-	searchParams: { [key: string]: string | string[] | undefined };
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
 	const awaitedSearchParams = await searchParams;
 	const page =

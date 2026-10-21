@@ -1,11 +1,17 @@
 import { render, screen } from '@testing-library/react';
 import Header from './header';
 
-describe('Header', () => {
-  it('renders a heading', () => {
-    render(<Header />);
+import { ThemeProvider } from './ThemeProvider';
 
-    const heading = screen.getByRole('link', { name: /FinAid Hub/i });
+describe('Header', () => {
+  it('renders a heading', async () => {
+    render(
+      <ThemeProvider>
+        <Header />
+      </ThemeProvider>
+    );
+
+    const heading = await screen.findByRole('link', { name: /FinAid Hub/i });
 
     expect(heading).toBeInTheDocument();
   });

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
+import { urlForImage } from "@/sanity/lib/image";
 import { PortableText } from "@portabletext/react";
 import { PortableTextBlock } from "sanity";
 
@@ -17,7 +17,7 @@ export default function AuthorBio({ author }: AuthorBioProps) {
 	return (
 		<div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center space-x-4">
 			<Image
-				src={author.image ? urlFor(author.image.asset).auto("format").url() : "/loader.svg"}
+				src={author.image ? urlForImage(author.image as unknown as Parameters<typeof urlForImage>[0]).replace(/\?.*/, '') : "/loader.svg"}
 				alt={author.name}
 				width={80}
 				height={80}

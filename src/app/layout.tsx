@@ -4,7 +4,7 @@ import Header from "./components/header";
 import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import Footer from "./components/footer";
-import { SanityLive } from "@/sanity/lib/client";
+import { SanityLive } from "@/sanity/lib/fetch";
 import { ThemeProvider } from "./components/ThemeProvider";
 
 export const metadata: Metadata = {

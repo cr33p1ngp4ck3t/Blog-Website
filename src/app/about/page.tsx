@@ -18,13 +18,13 @@ export default function AboutPage() {
       </div>
       <div className="mt-12 md:mt-16 prose prose-lg dark:prose-invert mx-auto">
         <p>
-          Navigating the world of financial assistance programs and personal savings can be overwhelming. At FinAid Hub, we're here to simplify it for you. Our mission is to provide clear, concise, and up-to-date information to help you make informed decisions about your financial future.
+          Navigating the world of financial assistance programs and personal savings can be overwhelming. At FinAid Hub, we&apos;re here to simplify it for you. Our mission is to provide clear, concise, and up-to-date information to help you make informed decisions about your financial future.
         </p>
         <p>
-          Our team of experts is dedicated to researching and writing about a wide range of financial topics, from government assistance programs to debt management and investment strategies. We believe that everyone deserves access to the information they need to achieve financial stability, and we're committed to making that a reality.
+          Our team of experts is dedicated to researching and writing about a wide range of financial topics, from government assistance programs to debt management and investment strategies. We believe that everyone deserves access to the information they need to achieve financial stability, and we&apos;re committed to making that a reality.
         </p>
         <p>
-          Thank you for visiting FinAid Hub. We're glad you're here, and we look forward to helping you on your journey to financial freedom.
+          Thank you for visiting FinAid Hub. We&apos;re glad you&apos;re here, and we look forward to helping you on your journey to financial freedom.
         </p>
       </div>
     </main>
