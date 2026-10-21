@@ -15,6 +15,6 @@ export async function GET(request: Request) {
     slug
   }`;
 
-  const results = await client.fetch(groqQuery, { query: `${query}*` });
+  const results = await client.fetch(groqQuery, { query: `${query}*` } as Record<string, unknown>);
   return NextResponse.json(results);
 }

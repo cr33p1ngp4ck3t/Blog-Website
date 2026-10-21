@@ -2,9 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
-import { Deal } from "@/sanity/types";
+import { urlForImage } from "@/sanity/lib/clientImage";
 import Image from "next/image";
+
+interface Deal {
+  _id: string;
+  title: string;
+  description: string;
+  link: string;
+  image: {
+    asset: {
+      _ref: string;
+      _type: string;
+    };
+  };
+  brand: string;
+  features: { name: string; value: string }[];
+}
 
 export default function ComparePage() {
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -61,7 +75,7 @@ export default function ComparePage() {
           >
             <div className="relative h-48 w-full">
               <Image
-                src={urlFor(deal.image)}
+                src={urlForImage(deal.image)}
                 alt={deal.title}
                 fill
                 className="object-cover rounded-md"

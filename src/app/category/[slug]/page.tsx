@@ -55,13 +55,15 @@ export default async function CategoryPage({
 	params,
 	searchParams,
 }: {
-	params: { slug: string };
-	searchParams: { [key: string]: string | string[] | undefined };
+	params: Promise<{ slug: string }>;
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-	const page = typeof searchParams.page === "string" ? Number(searchParams.page) : 1;
-	const posts = await getPostsByCategory(params.slug, page);
+    const resolvedSearchParams = await searchParams;
+    const resolvedParams = await params;
+	const page = typeof resolvedSearchParams.page === "string" ? Number(resolvedSearchParams.page) : 1;
+	const posts = await getPostsByCategory(resolvedParams.slug, page);
 	const categoryName =
-		params.slug.charAt(0).toUpperCase() + params.slug.slice(1).replace(/-/g, " ");
+		resolvedParams.slug.charAt(0).toUpperCase() + resolvedParams.slug.slice(1).replace(/-/g, " ");
 
 	return (
 		<main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
@@ -101,7 +103,7 @@ export default async function CategoryPage({
 					{page > 1 && (
 						<Link
 							href={{
-								pathname: `/category/${params.slug}`,
+								pathname: `/category/${resolvedParams.slug}`,
 								query: { page: page - 1 },
 							}}
 							className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md"
@@ -112,7 +114,7 @@ export default async function CategoryPage({
 					{posts.length === POSTS_PER_PAGE && (
 						<Link
 							href={{
-								pathname: `/category/${params.slug}`,
+								pathname: `/category/${resolvedParams.slug}`,
 								query: { page: page + 1 },
 							}}
 							className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md"

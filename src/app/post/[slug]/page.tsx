@@ -1,5 +1,5 @@
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
+import { urlFor, urlForImage } from "@/sanity/lib/image";
 import Image from "next/image";
 import Link from "next/link";
 import { PortableText } from "@portabletext/react";
@@ -12,11 +12,7 @@ import SocialShare from "@/app/components/SocialShare";
 import RelatedPosts from "@/app/components/RelatedPosts";
 import { Metadata } from "next";
 import { PortableTextBlock } from "sanity";
-import dynamic from "next/dynamic";
-
-const DisqusComments = dynamic(() => import("@/app/components/DisqusComments"), {
-  ssr: false,
-});
+import DisqusComments from "@/app/components/DisqusComments";
 
 interface Block {
 	_key: string;
@@ -50,9 +46,9 @@ interface Post {
 }
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		slug: string;
-	};
+	}>;
 }
 
 const getPost = async (slug: string) => {
@@ -75,7 +71,8 @@ const getPost = async (slug: string) => {
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-	const post: Post = await getPost((await params).slug);
+    const resolvedParams = await params;
+	const post: Post = await getPost(resolvedParams.slug);
 	if (!post) {
 		return {
 			title: "Not Found",
@@ -90,7 +87,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function PostPage({ params }: PageProps) {
-	const post: Post & { _updatedAt: string; excerpt: string } = await getPost(params.slug);
+    const resolvedParams = await params;
+	const post: Post & { _updatedAt: string; excerpt: string } = await getPost(resolvedParams.slug);
 	const { src, blurDataURL } = await urlFor(post.mainImage);
 
 	if (!post) {
@@ -101,7 +99,7 @@ export default async function PostPage({ params }: PageProps) {
 		"@context": "https://schema.org",
 		"@type": "BlogPosting",
 		headline: post.title,
-		image: urlFor(post.mainImage),
+		image: urlForImage(post.mainImage as unknown as Parameters<typeof urlForImage>[0]),
 		author: {
 			"@type": "Person",
 			name: post.author.name,
@@ -212,7 +210,7 @@ const portableTextComponents = {
 	types: {
 		image: ({ value }: { value: ImageValue }) => (
 			<Image
-				src={urlFor(value.src)}
+				src={urlForImage(value.src as unknown as Parameters<typeof urlForImage>[0])}
 				blurDataURL=""
 				alt={value.alt || " "}
 				width={800}

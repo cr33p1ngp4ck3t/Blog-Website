@@ -13,7 +13,7 @@ export default function ContactPage() {
           Contact Us
         </h1>
         <p className="mt-4 md:mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          We'd love to hear from you.
+          We&apos;d love to hear from you.
         </p>
       </div>
       <div className="mt-12 md:mt-16 max-w-lg mx-auto">
