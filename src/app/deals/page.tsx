@@ -1,73 +1,84 @@
-import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
-import { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-
-interface Deal {
-  title: string;
-  description: string;
-  link: string;
-  image: {
-    asset: {
-      _ref: string;
-      _type: string;
-    };
-  };
-  brand: string;
-}
-
-const getDeals = async () => {
-  const query = `*[_type == "deal"] {
-    title,
-    description,
-    link,
-    image,
-    brand
-  }`;
-
-  const deals = await client.fetch(query);
-  return deals;
-};
-
+import type { Metadata } from "next";
+import { ArrowUpRight } from "lucide-react";
 export const metadata: Metadata = {
-  title: "Top Deals",
-  description: "The best deals on financial products and services.",
+  title: "Useful money resources",
+  description:
+    "Official tools to check benefits, report scams, review credit reports, verify deposit insurance, and save on home energy.",
+  alternates: { canonical: "/deals" },
 };
-
-export default async function DealsPage() {
-  const deals: Deal[] = await getDeals();
-
+const resources = [
+  {
+    title: "Find financial assistance",
+    category: "USAGOV",
+    description:
+      "Start with the official directory for food, housing, health coverage, and utility assistance.",
+    url: "https://www.usa.gov/benefits",
+  },
+  {
+    title: "Build your emergency fund",
+    category: "CONSUMER FINANCIAL PROTECTION BUREAU",
+    description:
+      "Practical savings strategies for steady or irregular income, including automatic contributions and cash flow planning.",
+    url: "https://www.consumerfinance.gov/an-essential-guide-to-building-an-emergency-fund/",
+  },
+  {
+    title: "Check your credit reports",
+    category: "ANNUALCREDITREPORT.COM",
+    description:
+      "The federally authorized source for free credit reports. Review the details and dispute mistakes with the reporting company.",
+    url: "https://www.annualcreditreport.com/",
+  },
+  {
+    title: "Recognize and report a scam",
+    category: "FEDERAL TRADE COMMISSION",
+    description:
+      "Learn the warning signs before sending money, then find the official routes to report fraud.",
+    url: "https://consumer.ftc.gov/articles/how-avoid-scam",
+  },
+  {
+    title: "Verify your deposit protection",
+    category: "FDIC",
+    description:
+      "Understand what deposit insurance covers and use the official BankFind and coverage estimator links.",
+    url: "https://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance",
+  },
+  {
+    title: "Make home energy go further",
+    category: "U.S. DEPARTMENT OF ENERGY",
+    description:
+      "Explore the Energy Saver guides for insulation, heating, appliances, and low cost improvements.",
+    url: "https://www.energy.gov/energysaver/energy-saver",
+  },
+];
+export default function DealsPage() {
   return (
-    <main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
-      <div className="text-center">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Top Deals
+    <main id="main-content" className="shell">
+      <div className="page-intro">
+        <span className="section-label">THE USEFUL LINKS</span>
+        <h1>
+          A good place
+          <br />
+          <span>to go next.</span>
         </h1>
-        <p className="mt-4 md:mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          We&apos;ve curated the best deals on financial products and services to help you save money.
+        <p>
+          Official resources, practical tools, and a little less searching
+          around. These links are free to visit and are not paid placements.
         </p>
       </div>
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {deals.map((deal) => (
-          <Link key={deal.title} href={deal.link} target="_blank" rel="noopener noreferrer" className="border rounded-lg overflow-hidden block bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <Image
-              src={urlFor(deal.image).url()}
-              alt={deal.title}
-              width={400}
-              height={200}
-              className="object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{deal.title}</h3>
-              <p className="mt-2 text-gray-600 dark:text-gray-400">{deal.description}</p>
-              <div className="mt-4">
-                <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
-                  {deal.brand}
-                </span>
-              </div>
-            </div>
-          </Link>
+      <div className="resource-list">
+        {resources.map((resource) => (
+          <a
+            key={resource.url}
+            className="resource"
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="section-label">{resource.category}</span>
+            <h2>{resource.title}</h2>
+            <p>{resource.description}</p>
+            <ArrowUpRight size={24} />
+          </a>
         ))}
       </div>
     </main>

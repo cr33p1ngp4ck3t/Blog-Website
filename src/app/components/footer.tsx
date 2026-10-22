@@ -1,58 +1,58 @@
-import Link from 'next/link';
-
-/**
- * A simple, clean footer component for the website.
- */
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 export default function Footer() {
-	return (
-		<footer className="w-full mt-20 border-t border-gray-200 dark:border-gray-800">
-			<div className="max-w-5xl mx-auto py-12 px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-				<div>
-					<h3 className="text-lg font-semibold text-gray-900 dark:text-white">About Us</h3>
-					<p className="mt-2 text-gray-600 dark:text-gray-400">
-						Your trusted guide to financial stability.
-					</p>
-					<div className="mt-4">
-						<Link href="/about" className="text-blue-600 hover:underline">Read More</Link>
-					</div>
-				</div>
-				<div>
-					<h3 className="text-lg font-semibold text-gray-900 dark:text-white">Quick Links</h3>
-					<ul className="mt-2 space-y-2">
-						<li>
-							<Link href="/contact" className="text-gray-600 dark:text-gray-400 hover:underline">Contact Us</Link>
-						</li>
-						<li>
-							<Link href="/privacy-policy" className="text-gray-600 dark:text-gray-400 hover:underline">Privacy Policy</Link>
-						</li>
-						<li>
-							<Link href="/terms-of-service" className="text-gray-600 dark:text-gray-400 hover:underline">Terms of Service</Link>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<h3 className="text-lg font-semibold text-gray-900 dark:text-white">Subscribe to our Newsletter</h3>
-					<p className="mt-2 text-gray-600 dark:text-gray-400">
-						Get the latest financial tips and updates delivered to your inbox.
-					</p>
-					<form action="mailto:your-email@example.com" method="post" encType="text/plain" className="mt-4 flex">
-						<input
-							type="email"
-							placeholder="Enter your email"
-							className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600"
-						/>
-						<button
-							type="submit"
-							className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-						>
-							Subscribe
-						</button>
-					</form>
-				</div>
-			</div>
-			<div className="max-w-5xl mx-auto py-6 px-6 text-center text-gray-500 border-t border-gray-200 dark:border-gray-800">
-				<p>&copy; {new Date().getFullYear()} FinAid Hub. All Rights Reserved.</p>
-			</div>
-		</footer>
-	);
+  return (
+    <footer className="site-footer">
+      <div className="shell footer-main">
+        <div>
+          <Link href="/" className="wordmark footer-wordmark">
+            FinAid<span className="wordmark-light">Hub</span>
+            <span className="brand-dot">.</span>
+          </Link>
+          <p>
+            Less money stress.
+            <br />
+            More life.
+          </p>
+        </div>
+        <div className="footer-links">
+          <div>
+            <span>EXPLORE</span>
+            <Link href="/articles">The journal</Link>
+            <Link href="/#money-tool">Savings planner</Link>
+            <Link href="/deals">Useful resources</Link>
+            <Link href="/feed.xml">RSS feed ↗</Link>
+          </div>
+          <div>
+            <span>THE SMALL PRINT</span>
+            <Link href="/about">About us</Link>
+            <Link href="/contact">Get in touch</Link>
+            <Link href="/privacy-policy">Privacy</Link>
+            <Link href="/terms-of-service">Terms</Link>
+          </div>
+        </div>
+        <div className="footer-note">
+          <span className="footer-asterisk" aria-hidden="true">
+            ✳
+          </span>
+          <p>
+            Good information.
+            <br />A little perspective.
+            <br />A better next step.
+          </p>
+          <Link href="/about" className="text-link">
+            Our editorial approach <ArrowUpRight size={16} />
+          </Link>
+        </div>
+      </div>
+      <div className="shell footer-bottom">
+        <span>© {new Date().getFullYear()} FinAid Hub</span>
+        <p>
+          Independent educational content. U.S. assistance guides link to
+          official eligibility rules.
+        </p>
+        <a href="#top">BACK TO TOP ↑</a>
+      </div>
+    </footer>
+  );
 }

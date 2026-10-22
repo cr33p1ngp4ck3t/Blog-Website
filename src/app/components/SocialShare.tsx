@@ -16,8 +16,8 @@ interface SocialShareProps {
 
 export default function SocialShare({ url, title }: SocialShareProps) {
   return (
-    <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center space-x-4">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Share this post</h3>
+    <div className="share-row">
+      <h3>Pass a good read along</h3>
       <FacebookShareButton url={url} title={title}>
         <FacebookIcon size={32} round />
       </FacebookShareButton>

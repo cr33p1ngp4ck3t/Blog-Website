@@ -1,78 +1,110 @@
 "use client";
-
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Highlight from "./Highlight";
+import { ArrowUpRight, Search as SearchIcon, X } from "lucide-react";
 
-interface Post {
+interface Result {
   _id: string;
   title: string;
-  slug: {
-    current: string;
-  };
+  slug: { current: string };
 }
-
-export default function Search({onClose}: {onClose?: () => void}) { // Add onClose prop
+export default function Search({ onClose }: { onClose?: () => void }) {
+  const dialog = useRef<HTMLDialogElement>(null);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(false);
-  const searchRef = useRef<HTMLDivElement>(null);
-
+  const [results, setResults] = useState<Result[]>([]);
+  const [status, setStatus] = useState("");
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+    dialog.current?.showModal();
+  }, []);
+  useEffect(() => {
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      const term = query.trim();
+      if (!term) {
         setResults([]);
-        if (onClose) {
-          onClose(); // Call onClose when clicking outside
+        setStatus("");
+        return;
+      }
+      setStatus("Searching…");
+      try {
+        const response = await fetch(
+          `/api/search?query=${encodeURIComponent(term)}`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) throw new Error("Search failed");
+        const data: Result[] = await response.json();
+        setResults(data);
+        setStatus(
+          data.length
+            ? `${data.length} stories found`
+            : "No stories found. Try savings, debt, or assistance.",
+        );
+      } catch {
+        if (!controller.signal.aborted) {
+          setResults([]);
+          setStatus("Search is unavailable. Please try again.");
         }
       }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
+    }, 300);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      clearTimeout(timer);
+      controller.abort();
     };
-  }, [onClose]);
-
-  useEffect(() => {
-    const debounceSearch = setTimeout(async () => {
-      if (query) {
-        setLoading(true);
-        const response = await fetch(`/api/search?query=${query}`);
-        const data = await response.json();
-        setResults(data);
-        setLoading(false);
-      } else {
-        setResults([]);
-      }
-    }, 300); // 300ms debounce delay
-
-    return () => clearTimeout(debounceSearch);
   }, [query]);
-
   return (
-    <div className="relative" ref={searchRef}>
-      <form>
+    <dialog
+      ref={dialog}
+      className="search-dialog"
+      onCancel={onClose}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose?.();
+      }}
+      aria-labelledby="search-title"
+    >
+      <div className="search-heading">
+        <h2 id="search-title">Find your next good move.</h2>
+        <button
+          className="icon-button"
+          onClick={onClose}
+          aria-label="Close search"
+        >
+          <X />
+        </button>
+      </div>
+      <label className="search-input">
+        <SearchIcon size={22} />
         <input
-          type="text"
+          autoFocus
+          aria-label="Search articles"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for articles..."
-          className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Try “savings” or “credit cards”…"
+          type="search"
+          maxLength={100}
         />
-      </form>
-      {loading && <p className="mt-2 text-gray-600">Loading...</p>}
-      {results.length > 0 && (
-        <ul className="absolute z-10 w-full mt-2 bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600">
-          {results.map((post: Post) => (
-            <li key={post._id}>
-              <Link href={`/post/${post.slug.current}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                <Highlight text={post.title} query={query} />
-              </Link>
-            </li>
+      </label>
+      <p role="status" className="search-status">
+        {status || "Practical answers, a few keystrokes away."}
+      </p>
+      <ul className="search-results">
+        {results.map((post) => (
+          <li key={post._id}>
+            <Link href={`/post/${post.slug.current}`} onClick={onClose}>
+              {post.title}
+              <ArrowUpRight size={22} />
+            </Link>
+          </li>
+        ))}
+      </ul>
+      {!query && (
+        <div className="search-suggestions">
+          {["savings", "scam", "assistance"].map((term) => (
+            <button key={term} onClick={() => setQuery(term)}>
+              {term} ↗
+            </button>
           ))}
-        </ul>
+        </div>
       )}
-    </div>
+    </dialog>
   );
 }

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { DiscussionEmbed } from 'disqus-react';
+import { DiscussionEmbed } from "disqus-react";
 
 interface DisqusCommentsProps {
   post: {
@@ -10,7 +10,7 @@ interface DisqusCommentsProps {
 }
 
 const DisqusComments: React.FC<DisqusCommentsProps> = ({ post }) => {
-  const disqusShortname = 'finaid';
+  const disqusShortname = process.env.NEXT_PUBLIC_DISQUS_SHORTNAME || "";
   const disqusConfig = {
     url: `${process.env.NEXT_PUBLIC_BASE_URL}/post/${post.slug}`,
     identifier: post.slug,

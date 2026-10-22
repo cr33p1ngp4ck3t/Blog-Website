@@ -1,51 +1,25 @@
-import { MetadataRoute } from "next";
-import { client } from "@/sanity/lib/client";
-import { SanityDocument } from "next-sanity";
-
-interface Post extends SanityDocument {
-  slug: {
-    current: string;
-  };
-  _updatedAt: string;
-}
-
-interface Category extends SanityDocument {
-  slug: {
-    current: string;
-  };
-}
-
+import type { MetadataRoute } from "next";
+import { getCategories, getPosts } from "@/lib/posts";
+import { siteUrl } from "@/lib/site";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
-  const posts = await client.fetch<Post[]>(`*[_type == "post" && defined(slug.current)]{
-    slug,
-    _updatedAt
-  }`);
-
-  const categories = await client.fetch<Category[]>(`*[_type == "category" && defined(slug.current)]{
-    slug
-  }`);
-
-  const postUrls = posts.map((post) => ({
-    url: `${baseUrl}/post/${post.slug.current}`,
-    lastModified: post._updatedAt,
-  }));
-
-  const categoryUrls = categories.map((category) => ({
-    url: `${baseUrl}/category/${category.slug.current}`,
-  }));
-
-  const staticUrls = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-    },
-    {
-      url: `${baseUrl}/deals`,
-      lastModified: new Date(),
-    },
+  const [posts, categories] = await Promise.all([getPosts(), getCategories()]);
+  return [
+    ...[
+      "",
+      "/articles",
+      "/deals",
+      "/compare",
+      "/about",
+      "/contact",
+      "/privacy-policy",
+      "/terms-of-service",
+    ].map((path) => ({ url: siteUrl + path })),
+    ...posts.map((post) => ({
+      url: `${siteUrl}/post/${post.slug.current}`,
+      lastModified: post._updatedAt,
+    })),
+    ...categories.map((category) => ({
+      url: `${siteUrl}/category/${category.slug.current}`,
+    })),
   ];
-
-  return [...staticUrls, ...postUrls, ...categoryUrls];
 }

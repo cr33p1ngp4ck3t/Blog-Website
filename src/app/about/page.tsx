@@ -1,31 +1,63 @@
-import { Metadata } from "next";
-
+import type { Metadata } from "next";
+import Link from "next/link";
 export const metadata: Metadata = {
-  title: "About Us",
-  description: "Learn more about FinAid Hub and our mission to help you achieve financial stability.",
+  title: "Our story",
+  description:
+    "FinAid Hub turns complicated money questions into practical next steps, with official sources and an independent editorial approach.",
+  alternates: { canonical: "/about" },
 };
-
 export default function AboutPage() {
   return (
-    <main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
-      <div className="text-center">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 dark:text-white">
-          About FinAid Hub
+    <main id="main-content" className="shell">
+      <div className="page-intro">
+        <span className="section-label">OUR STORY</span>
+        <h1>
+          Less money stress.
+          <br />
+          <span>More room for life.</span>
         </h1>
-        <p className="mt-4 md:mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Your trusted guide to financial stability.
+        <p>
+          Good financial information should feel like a helping hand. That’s why
+          FinAid Hub exists.
         </p>
       </div>
-      <div className="mt-12 md:mt-16 prose prose-lg dark:prose-invert mx-auto">
+      <div className="simple-content prose">
+        <h2>Make your next step a little clearer.</h2>
         <p>
-          Navigating the world of financial assistance programs and personal savings can be overwhelming. At FinAid Hub, we're here to simplify it for you. Our mission is to provide clear, concise, and up-to-date information to help you make informed decisions about your financial future.
+          Money touches everything: the roof over your head, the food on the
+          table, and the plans you want to make. We explain everyday savings,
+          credit, emergency funds, and financial assistance in plain language.
         </p>
         <p>
-          Our team of experts is dedicated to researching and writing about a wide range of financial topics, from government assistance programs to debt management and investment strategies. We believe that everyone deserves access to the information they need to achieve financial stability, and we're committed to making that a reality.
+          You don’t need a perfect budget to get started. You need a useful
+          answer, a realistic action, and a place to find reliable information.
+        </p>
+        <h2>Sources you can check.</h2>
+        <p>
+          Our finance guides link to primary sources, including the Consumer
+          Financial Protection Bureau, Federal Trade Commission, FDIC, Energy
+          Department, and USAGov. Sources appear at the end of each new guide so
+          you can check the details yourself.
         </p>
         <p>
-          Thank you for visiting FinAid Hub. We're glad you're here, and we look forward to helping you on your journey to financial freedom.
+          Current news helps us choose useful subjects. Eligibility rules,
+          product terms, and program availability come from official providers.
+          We don’t promise approval for benefits or invent offers.
         </p>
+        <h2>Clear about our limits.</h2>
+        <p>
+          Articles are educational information. They do not replace advice from
+          a qualified professional who understands your circumstances. Our
+          assistance guides focus on U.S. programs; rules vary by state and
+          household.
+        </p>
+        <p>
+          The savings planner runs in your browser. It estimates a timeline
+          without interest or fees and does not ask for bank access.
+        </p>
+        <Link href="/articles" className="primary-button">
+          Find your next good read ↗
+        </Link>
       </div>
     </main>
   );

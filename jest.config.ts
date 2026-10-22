@@ -13,6 +13,7 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const config: Config = {
+  testPathIgnorePatterns: ['/node_modules/', '/tests/browser/'],
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
   // Add more setup options before each test is run
