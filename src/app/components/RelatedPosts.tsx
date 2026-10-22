@@ -4,9 +4,11 @@ import PostCard from "./PostCard";
 export default async function RelatedPosts({
   categories,
   currentPostSlug,
+  selectedPosts = [],
 }: {
   categories: Category[];
   currentPostSlug: string;
+  selectedPosts?: { _id: string }[];
 }) {
   const posts = (await getPosts()).filter(
     (post) => post.slug.current !== currentPostSlug,
@@ -17,9 +19,10 @@ export default async function RelatedPosts({
     ),
   );
   const related = [
+    ...selectedPosts.flatMap((selected) => posts.filter((post) => post._id === selected._id)),
     ...matching,
     ...posts.filter((post) => !matching.includes(post)),
-  ].slice(0, 3);
+  ].filter((post, index, all) => all.findIndex((item) => item._id === post._id) === index).slice(0, 3);
   if (!related.length) return null;
   return (
     <section className="related-section">

@@ -60,6 +60,25 @@
         "FDIC: Understanding deposit insurance",
         "https://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance"
       ]
+    ],
+    "keyTakeaways": [
+      "Choose a first goal based on a realistic unexpected expense.",
+      "Keep emergency money separate, accessible, and protected.",
+      "Set a contribution that leaves enough cash for essential bills."
+    ],
+    "faqs": [
+      {
+        "question": "How much should my first emergency fund hold?",
+        "answer": "Start with an amount that would help with a realistic surprise in your household. $1,000 is an example milestone, not an official minimum. A smaller achievable goal can be a useful first step."
+      },
+      {
+        "question": "Should I invest my emergency fund?",
+        "answer": "Your emergency fund needs to be accessible when a surprise arrives. Investments can lose value, so avoid treating them as a guaranteed source of cash for an immediate emergency."
+      }
+    ],
+    "relatedSlugs": [
+      "high-yield-savings-account-checklist",
+      "sinking-funds-for-irregular-expenses"
     ]
   },
   {
@@ -131,6 +150,25 @@
         "Identity theft recovery",
         "https://www.identitytheft.gov/"
       ]
+    ],
+    "keyTakeaways": [
+      "Pause when a caller demands urgent action with your money.",
+      "Contact the bank using a number you independently verified.",
+      "Never move money to a supposed safe account on an unsolicited instruction."
+    ],
+    "faqs": [
+      {
+        "question": "Can caller ID prove that my bank is calling?",
+        "answer": "No. Scammers can spoof caller ID. End an unexpected call and contact your bank using the number on your card or its official website."
+      },
+      {
+        "question": "What if I already sent money to a scammer?",
+        "answer": "Contact your bank or payment provider immediately, explain what happened, and ask what recovery options are available. Use the FTC official reporting and recovery guidance for the payment method involved."
+      }
+    ],
+    "relatedSlugs": [
+      "check-credit-report-and-dispute-errors",
+      "build-your-first-emergency-fund"
     ]
   },
   {
@@ -203,6 +241,25 @@
         "FTC: Consumer alerts",
         "https://consumer.ftc.gov/consumer-alerts"
       ]
+    ],
+    "keyTakeaways": [
+      "Start with official directories and the agency responsible for your need.",
+      "Confirm current eligibility and required documents with the provider.",
+      "Keep application confirmations and check follow-up requests."
+    ],
+    "faqs": [
+      {
+        "question": "Can FinAid Hub apply for benefits for me?",
+        "answer": "No. Use the official agency application process. FinAid Hub explains resources and does not process applications or determine eligibility."
+      },
+      {
+        "question": "Are benefits the same in every state?",
+        "answer": "No. Requirements, availability, and application methods can vary by program and state. Check the official office for your household and location."
+      }
+    ],
+    "relatedSlugs": [
+      "how-to-apply-for-snap-food-assistance",
+      "liheap-help-paying-energy-bills"
     ]
   },
   {
@@ -271,6 +328,25 @@
         "CFPB: Submit a complaint",
         "https://www.consumerfinance.gov/complaint/"
       ]
+    ],
+    "keyTakeaways": [
+      "Record balances, APRs, due dates, and minimum payments.",
+      "Protect essentials and choose a repeatable extra payment.",
+      "Contact the issuer early if you cannot meet a payment."
+    ],
+    "faqs": [
+      {
+        "question": "Should I pay the highest-interest card or the smallest balance first?",
+        "answer": "Paying higher-interest debt first can reduce interest costs. Paying the smallest balance first can make progress easier to see. Keep required minimums current and choose an approach you can sustain."
+      },
+      {
+        "question": "Does a balance transfer erase my debt?",
+        "answer": "No. It moves a balance to another account. Check the transfer fee, promotional period, and rate after the promotion, then compare the total cost with your repayment plan."
+      }
+    ],
+    "relatedSlugs": [
+      "check-credit-report-and-dispute-errors",
+      "budgeting-with-irregular-income"
     ]
   },
   {
@@ -339,6 +415,25 @@
         "FTC: How to avoid a scam",
         "https://consumer.ftc.gov/articles/how-avoid-scam"
       ]
+    ],
+    "keyTakeaways": [
+      "Start with low-cost changes that fit your home and climate.",
+      "Check equipment and appliance guidance before spending on upgrades.",
+      "Use official assistance resources when energy bills are unaffordable."
+    ],
+    "faqs": [
+      {
+        "question": "Will an energy-saving change lower every household bill by the same amount?",
+        "answer": "No. Results depend on climate, the home, equipment, usage, and energy prices. Use official guidance and compare costs before making a purchase."
+      },
+      {
+        "question": "Where can I get help with an overdue energy bill?",
+        "answer": "Start with your utility and the official LIHEAP office linked by USAGov. Ask about current assistance, payment arrangements, and local disconnection rules."
+      }
+    ],
+    "relatedSlugs": [
+      "liheap-help-paying-energy-bills",
+      "sinking-funds-for-irregular-expenses"
     ]
   },
   {
@@ -415,6 +510,25 @@
         "FoodSafety.gov: Cold food storage chart",
         "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts"
       ]
+    ],
+    "keyTakeaways": [
+      "Plan meals around food you already have.",
+      "Compare unit prices and choose quantities you will actually use.",
+      "Reduce waste before removing every food you enjoy."
+    ],
+    "faqs": [
+      {
+        "question": "Is buying in bulk always cheaper?",
+        "answer": "No. Compare the unit price and consider storage, the upfront cost, and whether you will use the food before it spoils. A lower unit price does not help if much of the purchase is wasted."
+      },
+      {
+        "question": "What if my household cannot afford enough food?",
+        "answer": "Use official SNAP and emergency food resources linked by USAGov. Budget adjustments cannot replace assistance when income does not cover essential food needs."
+      }
+    ],
+    "relatedSlugs": [
+      "how-to-apply-for-snap-food-assistance",
+      "budgeting-with-irregular-income"
     ]
   }
 ]

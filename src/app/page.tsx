@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, Check, MoveUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight, MoveUpRight } from "lucide-react";
 import { getPosts, postImage } from "@/lib/posts";
 import ArticleFeed from "./components/ArticleFeed";
 import SavingsPlanner from "./components/SavingsPlanner";
@@ -278,37 +278,9 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="manifesto">
-        <div className="shell manifesto-inner">
-          <span aria-hidden="true">✳</span>
-          <div>
-            <h2>
-              Money is a part of life.
-              <br />
-              <em>Let’s make it a better part.</em>
-            </h2>
-            <p>
-              We turn complicated money questions into clear, practical next
-              steps.
-              <br />
-              No jargon overload. Just information you can actually use.
-            </p>
-            <div className="manifesto-checks">
-              <span>
-                <Check size={15} /> Sources you can check
-              </span>
-              <span>
-                <Check size={15} /> Guides you can use
-              </span>
-              <span>
-                <Check size={15} /> Room to figure it out
-              </span>
-            </div>
-            <Link href="/about" className="primary-button">
-              Meet your new money resource <ArrowUpRight size={18} />
-            </Link>
-          </div>
-        </div>
+      <section className="shell follow-journal">
+        <div><span className="section-label">KEEP A GOOD HABIT GOING</span><h2>Make room for your next good read.</h2><p>Add FinAid Hub to your RSS reader for new guides, or compare where to keep your savings.</p></div>
+        <div className="contact-actions"><a href="/feed.xml" className="primary-button">Follow the journal <ArrowUpRight size={18} /></a><Link href="/compare" className="outline-button">Compare savings options <ArrowUpRight size={18} /></Link></div>
       </section>
       <script
         type="application/ld+json"

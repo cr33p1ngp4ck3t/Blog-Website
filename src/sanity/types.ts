@@ -20,6 +20,11 @@ export interface Post {
   publishedAt: string;
   readingTime: number;
   featured?: boolean;
+  archived?: boolean;
+  reviewedAt?: string;
+  keyTakeaways?: string[];
+  faqs?: { _key: string; question: string; answer: string }[];
+  relatedPosts?: { _id: string }[];
   body: PortableTextBlock[];
   author?: {
     name: string;
@@ -27,6 +32,13 @@ export interface Post {
     bio?: PortableTextBlock[];
   };
   sources?: { _key: string; title: string; url: string }[];
+}
+export interface Resource {
+  _id: string;
+  title: string;
+  description: string;
+  organization: string;
+  url: string;
 }
 export interface Deal {
   _id: string;

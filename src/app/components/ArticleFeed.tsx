@@ -4,13 +4,6 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type { Post } from "@/sanity/types";
 import PostCard from "./PostCard";
-const topics = [
-  { slug: "all", title: "All stories" },
-  { slug: "saving-money", title: "Saving money" },
-  { slug: "financial-health", title: "Financial health" },
-  { slug: "government-assistance", title: "Financial assistance" },
-  { slug: "home-savings", title: "Everyday living" },
-];
 export default function ArticleFeed({
   posts,
   homepage = false,
@@ -20,12 +13,24 @@ export default function ArticleFeed({
 }) {
   const [topic, setTopic] = useState("all");
   const [count, setCount] = useState(6);
+  const [sort, setSort] = useState("latest");
+  const topics = [
+    { slug: "all", title: "All stories" },
+    ...Array.from(
+      new Map(posts.flatMap((post) => post.categories)
+        .filter((category) => category.slug?.current)
+        .map((category) => [category.slug.current, { slug: category.slug.current, title: category.title }])).values(),
+    ),
+  ];
   const filtered =
     topic === "all"
       ? posts
       : posts.filter((post) =>
           post.categories.some((category) => category.slug?.current === topic),
         );
+  const sorted = [...filtered].sort((a, b) => sort === "quickest"
+    ? a.readingTime - b.readingTime || (b.publishedAt || "").localeCompare(a.publishedAt || "")
+    : (b.publishedAt || "").localeCompare(a.publishedAt || ""));
   return (
     <section id="latest" className="shell feed-section">
       <div className="section-heading">
@@ -69,8 +74,18 @@ export default function ArticleFeed({
           </button>
         ))}
       </div>
+      <div className="feed-toolbar">
+        <p aria-live="polite">{filtered.length} {filtered.length === 1 ? "story" : "stories"} to explore</p>
+        <label>
+          Sort stories
+          <select value={sort} onChange={(event) => { setSort(event.target.value); setCount(6); }}>
+            <option value="latest">Latest first</option>
+            <option value="quickest">Quickest reads</option>
+          </select>
+        </label>
+      </div>
       <div className="articles-grid">
-        {filtered.slice(0, count).map((post, index) => (
+        {sorted.slice(0, count).map((post, index) => (
           <PostCard post={post} index={index} key={post._id} />
         ))}
       </div>

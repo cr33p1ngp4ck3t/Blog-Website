@@ -8,7 +8,8 @@ import viewType from './viewType'
 import {comparisonTableType} from './comparisonTableType'
 import {prosConsType} from './prosConsType'
 import {dealType} from './dealType'
+import {resourceType} from './resourceType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, categoryType, postType, authorType, viewType, comparisonTableType, prosConsType, dealType],
+  types: [blockContentType, categoryType, postType, authorType, resourceType, viewType, comparisonTableType, prosConsType, dealType],
 }

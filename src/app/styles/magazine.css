@@ -1273,7 +1273,25 @@ button {
   gap: 14px;
   margin-top: 25px;
   padding: 12px 0;
+  flex-wrap: wrap;
 }
+.share-status { width: 100%; margin: 0; font-size: 12px; color: var(--muted-ink); }
+.feed-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin: -10px 0 25px; font-size: 12px; color: var(--muted-ink); }
+.feed-toolbar p { margin: 0; }
+.feed-toolbar label { display: flex; align-items: center; gap: 10px; }
+.feed-toolbar select { font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--line); padding: 8px; }
+.article-takeaways { padding: 24px; background: var(--surface); border-left: 3px solid var(--orange); margin-bottom: 35px; }
+.prose .article-takeaways h2 { margin-top: 10px; font-size: 28px; }
+.article-takeaways ul { margin-bottom: 0; }
+.article-faqs { margin-top: 45px; }
+.article-faqs button { font-size: 16px; color: var(--ink); gap: 20px; }
+.article-faqs p { margin-block: 0 12px; font-size: 15px; }
+.archive-notice { padding: 16px; background: var(--surface); border-left: 3px solid var(--orange); font-size: 14px; }
+.archive-notice a { text-decoration: underline; }
+.follow-journal { padding-block: 45px 65px; border-top: 1px solid var(--line); display: flex; align-items: center; flex-wrap: wrap; gap: 25px 50px; }
+.follow-journal > div { flex: 1 1 300px; }
+.follow-journal h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; margin: 15px 0; }
+.follow-journal p { color: var(--muted-ink); line-height: 1.7; }
 .share-row h3 {
   font-size: 12px;
   margin-right: auto;

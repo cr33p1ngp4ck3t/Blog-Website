@@ -14,10 +14,12 @@ if (!projectId || !dataset) {
 }
 
 export default defineConfig({
+  name: 'finaid-hub',
+  title: 'FinAid Hub editorial',
   basePath: '/studio',
   projectId,
   dataset,
-  schema,
+  schema: { ...schema, templates: (templates) => templates.filter((template) => !['view', 'deal'].includes(template.schemaType)) },
   plugins: [
     structureTool({structure}),
     visionTool({defaultApiVersion: apiVersion}),

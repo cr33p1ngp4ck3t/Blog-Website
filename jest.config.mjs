@@ -10,5 +10,6 @@ export default createJestConfig({
   moduleNameMapper: {
     "^@/sanity/lib/client$": "<rootDir>/src/sanity/__mocks__/client.ts",
     "next-sanity": "<rootDir>/src/__mocks__/next-sanity.ts",
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
 });

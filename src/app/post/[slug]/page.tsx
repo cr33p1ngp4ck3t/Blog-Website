@@ -13,6 +13,7 @@ import AuthorBio from "@/app/components/AuthorBio";
 import SocialShare from "@/app/components/SocialShare";
 import RelatedPosts from "@/app/components/RelatedPosts";
 import DisqusComments from "@/app/components/DisqusComments";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -30,6 +31,7 @@ export async function generateMetadata({
     title: post.title,
     description,
     alternates: { canonical: url },
+    ...(post.archived ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title: post.title,
       description,
@@ -141,6 +143,9 @@ export default async function PostPage({ params }: PageProps) {
         )}
       </nav>
       <article>
+        {post.archived && (
+          <p className="archive-notice">This article is archived. <Link href="/articles">Explore our current money guides →</Link></p>
+        )}
         <header className="article-heading">
           <div className="post-card-meta">
             <span>{firstCategory?.title || "The journal"}</span>
@@ -166,6 +171,7 @@ export default async function PostPage({ params }: PageProps) {
               </time>
             )}
             {!!post.sources?.length && <span>Sources linked below</span>}
+            {post.reviewedAt && <span>Fact-checked <time dateTime={post.reviewedAt}>{new Date(post.reviewedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })}</time></span>}
           </div>
         </header>
         <div className="article-cover">
@@ -178,13 +184,33 @@ export default async function PostPage({ params }: PageProps) {
           />
         </div>
         <div className="article-reading">
-          <TableOfContents body={post.body || []} />
+          <TableOfContents body={post.body || []} hasTakeaways={!!post.keyTakeaways?.length} hasFaqs={!!post.faqs?.length} hasSources={!!post.sources?.length} />
           <div>
             <div className="prose">
+              {!!post.keyTakeaways?.length && (
+                <section className="article-takeaways" aria-labelledby="takeaways-heading">
+                  <span className="section-label">THE QUICK READ</span>
+                  <h2 id="takeaways-heading">What to take away</h2>
+                  <ul>{post.keyTakeaways.map((takeaway) => <li key={takeaway}>{takeaway}</li>)}</ul>
+                </section>
+              )}
               <PortableText
                 value={post.body || []}
                 components={portableTextComponents}
               />
+              {!!post.faqs?.length && (
+                <section className="article-faqs" aria-labelledby="questions-heading">
+                  <h2 id="questions-heading">Questions you might have</h2>
+                  <Accordion type="single" collapsible>
+                    {post.faqs.map((faq) => (
+                      <AccordionItem key={faq._key} value={faq._key}>
+                        <AccordionTrigger>{faq.question}</AccordionTrigger>
+                        <AccordionContent><p>{faq.answer}</p></AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </section>
+              )}
               {!!post.sources?.length && (
                 <section className="sources">
                   <h2 id="sources">Sources & further reading</h2>
@@ -202,7 +228,7 @@ export default async function PostPage({ params }: PageProps) {
                     ))}
                   </ol>
                   <p>
-                    Educational information, researched October 2026. Confirm
+                    Educational information. Confirm
                     current terms and eligibility directly with the official
                     provider.
                   </p>
@@ -222,7 +248,12 @@ export default async function PostPage({ params }: PageProps) {
       <RelatedPosts
         categories={post.categories}
         currentPostSlug={post.slug.current}
+        selectedPosts={post.relatedPosts}
       />
+      {!!post.faqs?.length && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd({
+        "@context": "https://schema.org", "@type": "FAQPage",
+        mainEntity: post.faqs.map((faq) => ({ "@type": "Question", name: faq.question, acceptedAnswer: { "@type": "Answer", text: faq.answer } })),
+      }) }} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd(articleData) }}

@@ -18,13 +18,15 @@ test("homepage, topic filtering, and savings planner work together", async ({
     fullPage: true,
   });
   await page.getByRole("button", { name: "Saving money", exact: true }).click();
-  await expect(page.locator(".articles-grid .post-card")).toHaveCount(1);
-  await expect(page.locator(".articles-grid")).toContainText(
+  await expect(page.locator(".articles-grid .post-card")).toHaveCount(3);
+  await expect(page.locator(".articles-grid").first()).toContainText(
     "Your first $1,000",
   );
   await page.getByRole("button", { name: "All stories", exact: true }).click();
   await page.getByRole("button", { name: "More good reads" }).click();
-  await expect(page.locator(".articles-grid .post-card")).toHaveCount(10);
+  await expect(page.locator(".articles-grid .post-card")).toHaveCount(12);
+  await page.getByLabel("Sort stories").selectOption("quickest");
+  await expect(page.locator(".articles-grid .post-card")).toHaveCount(6);
   await page.getByLabel("Monthly contribution", { exact: true }).fill("250");
   await expect(page.getByTestId("savings-months")).toHaveText("4");
   await page.getByLabel("Already saved", { exact: true }).fill("1000");
@@ -56,9 +58,15 @@ test("search finds a real article and the reading page exposes sources and metad
     "Your first $1,000",
   );
   const toc = page.getByRole("navigation", { name: "On this page" });
-  await toc.getByRole("link").first().click();
+  await toc.getByRole("link", { name: /Start with the next surprise/ }).click();
   await expect(page).toHaveURL(/#section-/);
   await expect(page.locator(".sources a")).toHaveCount(2);
+  await expect(page.getByRole("heading", { name: "What to take away" })).toBeVisible();
+  await page.getByRole("button", { name: "How much should my first emergency fund hold?" }).click();
+  await expect(page.getByRole("region", { name: "How much should my first emergency fund hold?" })).toContainText("not an official minimum");
+  await expect(page.getByRole("button", { name: "Share on WhatsApp" })).toBeVisible();
+  await page.getByRole("button", { name: "Copy article link" }).click();
+  await expect(page.locator(".share-status")).toContainText(/Link copied|Copy the URL/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
     /https:\/\/.*\/post\/build-your-first-emergency-fund/,
@@ -77,6 +85,8 @@ test("search finds a real article and the reading page exposes sources and metad
   expect(article.mainEntityOfPage["@id"]).toContain(
     "/post/build-your-first-emergency-fund",
   );
+  const faq = schemas.map((text) => JSON.parse(text)).find((data) => data["@type"] === "FAQPage");
+  expect(faq.mainEntity).toHaveLength(2);
   await page.screenshot({
     path: path.join(os.tmpdir(), "finaid-article.png"),
     fullPage: true,
@@ -131,7 +141,10 @@ test("resources, comparison, missing stories, and discovery endpoints work", asy
     page.getByRole("columnheader", { name: "Money market deposit account" }),
   ).toBeVisible();
   await page.goto("/deals");
-  await expect(page.locator(".resource-list .resource")).toHaveCount(6);
+  await expect(page.locator(".resource-list .resource")).toHaveCount(8);
+  await page.goto("/post/the-mysterious-world-of-black-holes");
+  await expect(page.locator(".archive-notice")).toContainText("archived");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
   await page.goto("/post/this-story-does-not-exist");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     /find\s*your next move/,
@@ -148,10 +161,31 @@ test("resources, comparison, missing stories, and discovery endpoints work", asy
   const sitemap = await request.get("/sitemap.xml");
   expect(sitemap.status()).toBe(200);
   expect(await sitemap.text()).toContain("build-your-first-emergency-fund");
+  expect(await sitemap.text()).not.toContain("the-mysterious-world-of-black-holes");
+  expect(await sitemap.text()).not.toContain("/category/space");
   const feed = await request.get("/feed.xml");
   expect(feed.status()).toBe(200);
   expect(await feed.text()).toContain("<rss");
+  expect(await feed.text()).toContain("high-yield-savings-account-checklist");
+  expect(await feed.text()).not.toContain("the-mysterious-world-of-black-holes");
+  const archivedSearch = await request.get("/api/search?query=black%20holes");
+  expect(await archivedSearch.json()).toEqual([]);
   const robots = await request.get("/robots.txt");
   expect(await robots.text()).toContain("Disallow: /studio/");
   expect((await request.get("/opengraph-image")).status()).toBe(200);
+});
+
+test("new guide shows review information and usable questions on mobile", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/post/high-yield-savings-account-checklist");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("high-yield savings account");
+  await expect(page.locator(".article-byline")).toContainText("Fact-checked");
+  await page.getByRole("button", { name: "Can the advertised savings rate change?" }).click();
+  await expect(page.getByRole("region", { name: "Can the advertised savings rate change?" })).toContainText("generally variable");
+  await expect(page.locator(".related-section .post-card")).toHaveCount(3);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  expect(errors).toEqual([]);
+  await page.screenshot({ path: path.join(os.tmpdir(), "finaid-new-guide-mobile.png"), fullPage: true });
 });

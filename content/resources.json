@@ -1,0 +1,10 @@
+[
+  { "title": "Find financial assistance", "organization": "USAGov", "description": "Start with the official directory for food, housing, health coverage, and utility assistance.", "url": "https://www.usa.gov/benefits" },
+  { "title": "Build your emergency fund", "organization": "Consumer Financial Protection Bureau", "description": "Practical savings strategies for steady or irregular income, including automatic contributions and cash flow planning.", "url": "https://www.consumerfinance.gov/an-essential-guide-to-building-an-emergency-fund/" },
+  { "title": "Check your credit reports", "organization": "AnnualCreditReport.com", "description": "The federally authorized source for free credit reports. Review the details and dispute mistakes with the reporting company.", "url": "https://www.annualcreditreport.com/" },
+  { "title": "Recognize and report a scam", "organization": "Federal Trade Commission", "description": "Learn the warning signs before sending money, then find the official routes to report fraud.", "url": "https://consumer.ftc.gov/articles/how-avoid-scam" },
+  { "title": "Verify your deposit protection", "organization": "FDIC", "description": "Understand what deposit insurance covers and use the official BankFind and coverage estimator links.", "url": "https://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance" },
+  { "title": "Make home energy go further", "organization": "U.S. Department of Energy", "description": "Explore the Energy Saver guides for insulation, heating, appliances, and low cost improvements.", "url": "https://www.energy.gov/energysaver/energy-saver" },
+  { "title": "Apply for food assistance", "organization": "USAGov", "description": "Find your state SNAP office, learn how to apply, and check where to get information about your EBT benefits.", "url": "https://www.usa.gov/food-stamps" },
+  { "title": "Get help with energy bills", "organization": "USAGov", "description": "Find LIHEAP and weatherization offices and learn where to check your state's utility disconnection rules.", "url": "https://www.usa.gov/help-with-energy-bills" }
+]
