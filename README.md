@@ -16,6 +16,16 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+Use Node.js 24.18 or newer and npm. Install the locked dependencies with `npm ci`.
+Before deploying, run `npm run lint`, `npm run typecheck`, `npm test -- --runInBand`,
+`npm run build`, and `npm audit`. Browser checks use `npm run test:e2e` against a
+running local server and require Microsoft Edge.
+
+The unused public `/api/views` write endpoint has been removed. Sanity content
+seeding still reads `NEXT_PRIVATE_SANITY_TOKEN` only when explicitly publishing
+with `scripts/seed-content.mjs --publish`; keep that token in server environment
+variables.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

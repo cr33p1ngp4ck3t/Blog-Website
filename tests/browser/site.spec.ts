@@ -137,6 +137,11 @@ test("resources, comparison, missing stories, and discovery endpoints work", asy
     /find\s*your next move/,
   );
   expect((await request.get("/api/search")).status()).toBe(400);
+  for (const postId of ["published-post", "drafts.secret-post"]) {
+    expect(
+      (await request.post("/api/views", { data: { postId } })).status(),
+    ).toBe(404);
+  }
   const results = await request.get("/api/search?query=scam");
   expect(results.status()).toBe(200);
   expect((await results.json()).length).toBeGreaterThan(0);

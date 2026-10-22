@@ -18,6 +18,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     try {
       const storedTheme = localStorage.getItem("theme");
       if (storedTheme === "light" || storedTheme === "dark")
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Read browser storage after hydration to preserve the server-rendered theme.
         setTheme(storedTheme);
     } catch {
       /* Browser storage can be disabled. */
